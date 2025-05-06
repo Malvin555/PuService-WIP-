@@ -1,4 +1,6 @@
 import Layout from "./layout";
+import Nav from "@/components/layout/landing/nav";
+import Footer from "@/components/layout/landing/footer";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +16,7 @@ import {
 export default function HomePage() {
   return (
     <Layout>
+      <Nav />
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 sm:py-32">
@@ -228,8 +231,7 @@ export default function HomePage() {
                 </Button>
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="text-white border-white hover:bg-emerald-700"
+                  className="text-white border-white bg-emerald-700 hover:bg-emerald-700"
                 >
                   Contact Sales
                 </Button>
@@ -238,6 +240,7 @@ export default function HomePage() {
           </div>
         </section>
       </div>
+      <Footer />
     </Layout>
   );
 }
