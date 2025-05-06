@@ -33,13 +33,14 @@ export default function Navigation() {
             </div>
           </div>
           <div className="hidden sm:flex sm:items-center">
-            <a
-              href="{{ route('login.form') }}"
-              className="text-sm font-medium text-gray-700 hover:text-emerald-600 mr-4"
+            <Button
+              variant="ghost"
+              className="text-emerald-600 hover:bg-transparent hover:text-emerald-600"
             >
               Login
-            </a>
-            <Button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+            </Button>
+
+            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
               Register
             </Button>
           </div>

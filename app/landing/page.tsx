@@ -20,7 +20,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 sm:py-32">
-          <div className="absolute inset-0 bg-[url(/placeholder.svg?height=500&width=1920)] bg-cover bg-center opacity-5"></div>
+          <div className="inset-0 bg-cover bg-center opacity-5"></div>
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
               <div className="space-y-6">

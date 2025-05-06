@@ -159,7 +159,7 @@ export default function Footer() {
                   />
                 </svg>
                 <span className="text-sm text-gray-500">
-                  123 Main Street, Capital City
+                  221B Baker Street, London
                 </span>
               </li>
               <li className="flex items-start">
@@ -178,7 +178,7 @@ export default function Footer() {
                   />
                 </svg>
                 <span className="text-sm text-gray-500">
-                  info@puservice.com
+                  malvin@puservice.com
                 </span>
               </li>
               <li className="flex items-start">
@@ -196,7 +196,7 @@ export default function Footer() {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                <span className="text-sm text-gray-500">+1 (555) 123-4567</span>
+                <span className="text-sm text-gray-500">+44 18 9122 1895</span>
               </li>
             </ul>
           </div>

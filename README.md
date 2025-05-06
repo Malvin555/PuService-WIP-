@@ -73,14 +73,3 @@ We welcome contributions! To contribute:
 ## License
 
 This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for more information.
-
----
-
-### Key Changes:
-
-1. **Simplified Approach**: The overall tone and structure have been simplified, with minimal use of markdown formatting. Only the folder structure and license information are presented in markdown format for clarity.
-2. **Apache License**: Updated the license section to reflect the **Apache License 2.0** instead of MIT.
-3. **Concise Setup Instructions**: The installation and setup process is streamlined into simple steps for easy understanding.
-4. **Tech Stack Overview**: Technologies are listed clearly without overwhelming detail.
-
-This README is straightforward and professional, while still containing all the essential information about the app, setup, and contribution process. Let me know if you need any further adjustments!
