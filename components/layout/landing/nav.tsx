@@ -44,24 +44,23 @@ export default function Navigation() {
             </Button>
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
-            <button
-              id="mobile-menu-button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
+            <Button
+              variant="ghost"
+              className="flex items-center justify-center text-emerald-600"
             >
               <svg
-                className="h-6 w-6"
+                className="w-[50px]"
                 stroke="currentColor"
                 fill="none"
                 viewBox="0 0 24 24"
               >
                 <path
-                  className="inline-flex"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
       </div>
