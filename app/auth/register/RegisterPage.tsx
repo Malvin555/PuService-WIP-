@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Github, Twitter } from "lucide-react";
 import Footer from "@/components/layout/landing/footer";
 import Nav from "@/components/layout/landing/nav";
@@ -33,102 +37,78 @@ export default function RegisterPage() {
             <div className="bg-card py-8 px-4 shadow-sm sm:rounded-lg sm:px-10 border border-border">
               <form className="space-y-6" action="#" method="POST">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Full name
-                  </label>
+                  <Label>Full Name</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="name"
                       name="name"
                       type="text"
                       autoComplete="name"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                    />
+                      placeholder="John Doe"
+                    ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Email address
-                  </label>
+                  <Label>Email Address</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="email"
                       name="email"
                       type="email"
                       autoComplete="email"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                    />
+                      placeholder="john@doe.com"
+                    ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Password
-                  </label>
+                  <Label>Password</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="password"
                       name="password"
                       type="password"
                       autoComplete="new-password"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                    />
+                    ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password_confirmation"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Confirm password
-                  </label>
+                  <Label>Confirm Password</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="password_confirmation"
                       name="password_confirmation"
                       type="password"
                       autoComplete="new-password"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                    />
+                    ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
                 </div>
 
-                <div className="flex items-center">
-                  <input
+                <div className="flex items-start gap-x-2">
+                  <Checkbox
                     id="terms"
                     name="terms"
-                    type="checkbox"
                     className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
-                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    onCheckedChange={(checked) =>
+                      setTermsAccepted(checked === true)
+                    }
                   />
-                  <label
-                    htmlFor="terms"
-                    className="ml-2 block text-sm text-foreground"
-                  >
+                  <Label htmlFor="terms" className="leading-snug">
                     I agree to the{" "}
                     <Link
                       href="/terms"
                       target="_blank"
-                      className="font-medium text-primary hover:text-primary/90"
+                      className="text-primary hover:text-primary/90 underline"
                     >
                       Terms of Service
                     </Link>{" "}
@@ -136,26 +116,26 @@ export default function RegisterPage() {
                     <Link
                       href="/privacy"
                       target="_blank"
-                      className="font-medium text-primary hover:text-primary/90"
+                      className="text-primary hover:text-primary/90 underline"
                     >
-                      Privacy Policy
+                      Policy
                     </Link>
-                  </label>
+                  </Label>
                 </div>
 
                 <div>
-                  <button
+                  <Button
                     id="registerButton"
                     type="submit"
                     disabled={!termsAccepted}
-                    className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground ${
+                    className={`w-full ${
                       termsAccepted
                         ? "bg-primary hover:bg-primary/90"
                         : "bg-muted text-muted-foreground cursor-not-allowed"
                     }`}
                   >
-                    Create account
-                  </button>
+                    Create Account
+                  </Button>
                 </div>
               </form>
 

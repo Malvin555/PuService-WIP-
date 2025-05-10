@@ -12,6 +12,11 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 
+export const metadata = {
+  title: "PuService - User Dashboard",
+  description: "User dashboard page",
+};
+
 export default function UserPage() {
   // Mock data for recent reports
   const reports = [
@@ -62,7 +67,7 @@ export default function UserPage() {
               </div>
             </Link>
 
-            <Link href="/dashboard/user/report/history" className="block group">
+            <Link href="/user/report/history" className="block group">
               <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:border-primary transition-colors duration-200">
                 <div className="px-4 py-5 sm:p-6 text-center">
                   <div className="mx-auto inline-flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
@@ -78,7 +83,7 @@ export default function UserPage() {
               </div>
             </Link>
 
-            <Link href="/dashboard/user/notifications" className="block group">
+            <Link href="/user/notifications" className="block group">
               <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:border-primary transition-colors duration-200">
                 <div className="px-4 py-5 sm:p-6 text-center">
                   <div className="mx-auto inline-flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
@@ -121,7 +126,7 @@ export default function UserPage() {
                 reports.map((report) => (
                   <li key={report.id}>
                     <Link
-                      href="/dashboard/user/report/history"
+                      href="/user/report/history"
                       className="block hover:bg-accent"
                     >
                       <div className="px-4 py-4 sm:px-6">

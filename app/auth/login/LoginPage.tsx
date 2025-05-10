@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { Github, Twitter } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Nav from "@/components/layout/landing/nav";
 import Footer from "@/components/layout/landing/footer";
 
@@ -32,51 +35,36 @@ export default function LoginPage() {
             <div className="bg-card py-8 px-4 shadow-sm sm:rounded-lg sm:px-10 border border-border">
               <form className="space-y-6" action="#" method="POST">
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Email address
-                  </label>
+                  <Label>Email Address</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="email"
                       name="email"
                       type="email"
+                      autoComplete="email"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      placeholder="your@email.com"
                     />
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Password
-                  </label>
+                  <Label>Password</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="password"
                       name="password"
                       type="password"
                       autoComplete="current-password"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                    />
+                    ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
                 </div>
 
                 <div className="flex">
-                  <button
-                    type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                  >
-                    Sign in
-                  </button>
+                  <Button className="w-full">Submit</Button>
                 </div>
               </form>
 

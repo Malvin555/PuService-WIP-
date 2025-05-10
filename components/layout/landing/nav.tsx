@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 const sections = ["home", "feature", "about"];
 
@@ -11,7 +12,7 @@ export default function NavigationMenu() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const pathname = usePathname();
-  const hiddenPaths = ["/auth/login", "/auth/register"];
+  const hiddenPaths = ["/auth/login", "/auth/register", "/privacy"];
   const shouldHideNav = hiddenPaths.includes(pathname);
 
   const toggleMobileMenu = () => {
@@ -68,15 +69,13 @@ export default function NavigationMenu() {
           </div>
           <div className="hidden sm:flex sm:items-center sm:space-x-2">
             <Link href="/auth/login">
-              <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary hover:text-primary/90 h-10 px-4 py-2">
+              <Button variant={"ghost"} className="hover:bg-transparent">
                 Login
-              </button>
+              </Button>
             </Link>
 
             <Link href="/auth/register">
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
-                Register
-              </button>
+              <Button className="h-11 px-8">Register</Button>
             </Link>
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
@@ -110,17 +109,14 @@ export default function NavigationMenu() {
 
           <div className="pt-4 pb-3 border-t border-border">
             <div className="flex items-center px-4 space-x-3">
-              <Link
-                href="/login"
-                className="block text-base font-medium text-foreground hover:text-primary"
-              >
-                Login
+              <Link href="/auth/login">
+                <Button variant={"ghost"} className="hover:bg-transparent">
+                  Login
+                </Button>
               </Link>
-              <Link
-                href="/register"
-                className="block px-4 py-2 text-base font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90"
-              >
-                Register
+
+              <Link href="/auth/register">
+                <Button className="px-4 py-2h">Register</Button>
               </Link>
             </div>
           </div>

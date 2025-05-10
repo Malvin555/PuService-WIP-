@@ -35,20 +35,20 @@ export default function Nav() {
             <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
               <Link
                 href="/user"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
-                  isActive("/dashboard/user")
-                    ? "border-b-2 border-primary text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:border-border"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ease-in-out ${
+                  isActive("/user")
+                    ? "text-foreground border-primary"
+                    : "text-muted-foreground border-transparent hover:text-foreground hover:border-primary"
                 }`}
               >
                 Dashboard
               </Link>
               <Link
-                href="/dashboard/user/report/history"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
-                  isActive("/dashboard/user/report/history")
-                    ? "border-b-2 border-primary text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:border-border"
+                href="/user/report/history"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ease-in-out ${
+                  isActive("/user/report/history")
+                    ? "text-foreground border-primary"
+                    : "text-muted-foreground border-transparent hover:text-foreground hover:border-primary"
                 }`}
               >
                 History
@@ -60,7 +60,7 @@ export default function Nav() {
               type="button"
               className="relative p-1 rounded-full text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary mr-3"
             >
-              <Link href="/dashboard/user/notifications">
+              <Link href="/user/notifications">
                 <span className="sr-only">View notifications</span>
                 <Bell className="h-6 w-6" />
                 <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-destructive ring-2 ring-background"></span>
@@ -99,7 +99,7 @@ export default function Nav() {
                   aria-labelledby="user-menu-button"
                 >
                   <Link
-                    href="user/profile"
+                    href="/user/profile"
                     className="block px-4 py-2 text-sm text-foreground hover:bg-accent"
                     role="menuitem"
                   >
@@ -132,9 +132,9 @@ export default function Nav() {
         <div id="mobile-menu" className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
             <Link
-              href="/dashboard/user"
+              href="/user"
               className={`block pl-3 pr-4 py-2 border-l-4 ${
-                isActive("/dashboard/user")
+                isActive("/user")
                   ? "border-primary text-primary bg-primary/10"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
               } text-base font-medium`}
@@ -142,9 +142,9 @@ export default function Nav() {
               Dashboard
             </Link>
             <Link
-              href="/dashboard/user/report/history"
+              href="/user/report/history"
               className={`block pl-3 pr-4 py-2 border-l-4 ${
-                isActive("/dashboard/user/report/history")
+                isActive("/user/report/history")
                   ? "border-primary text-primary bg-primary/10"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
               } text-base font-medium`}
@@ -155,10 +155,14 @@ export default function Nav() {
           <div className="pt-4 pb-3 border-t border-border">
             <div className="space-y-1">
               <Link
-                href="user/profile"
-                className="block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent"
+                href="/user/profile"
+                className={`block pl-3 pr-4 py-2 border-l-4 ${
+                  isActive("/user/profile")
+                    ? "border-primary text-primary bg-primary/10"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
+                } text-base font-medium`}
               >
-                Profile
+                Profile{" "}
               </Link>
               <Link
                 href="/logout"

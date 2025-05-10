@@ -1,6 +1,13 @@
 import Nav from "@/components/layout/user/nav";
 import Footer from "@/components/layout/landing/footer";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+export const metadata = {
+  title: "PuService - User Profile",
+  description: "Manage your account information and preferences",
+};
 
 export default function ProfilePage() {
   return (
@@ -37,76 +44,53 @@ export default function ProfilePage() {
                 action="/api/profile/update"
                 method="POST"
               >
-                <div className="gap-y-6 gap-x-4">
+                <div className="gap-y-10 gap-x-4">
                   <div className="sm:col-span-3">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Username
-                    </label>
+                    <Label>Username</Label>
+
                     <div className="mt-1">
-                      <input
+                      <Input
                         type="text"
                         name="name"
                         id="name"
                         defaultValue="Malvin"
-                        className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                      />
+                      ></Input>
                     </div>
                   </div>
 
-                  <div className="mt-2">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Email address
-                    </label>
+                  <div className="mt-6">
+                    <Label>Email Adress</Label>
                     <div className="mt-1">
-                      <input
+                      <Input
                         id="email"
                         name="email"
                         type="email"
                         defaultValue="malvin@example.com"
-                        className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                      />
+                      ></Input>
                     </div>
                   </div>
 
-                  <div className="mt-2">
-                    <label
-                      htmlFor="phone"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Phone number
-                    </label>
+                  <div className="mt-6">
+                    <Label>Phone Number</Label>
                     <div className="mt-1">
-                      <input
+                      <Input
                         type="text"
                         name="phone_number"
                         id="phone"
                         defaultValue="+44 18 9122 1895"
-                        className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                      />
+                      ></Input>
                     </div>
                   </div>
 
-                  <div className="mt-2">
-                    <label
-                      htmlFor="address"
-                      className="block text-sm font-medium text-foreground"
-                    >
-                      Street address
-                    </label>
+                  <div className="mt-6">
+                    <Label>Street Address</Label>
                     <div className="mt-1">
-                      <input
+                      <Input
                         type="text"
                         name="address"
                         id="address"
                         defaultValue="221B Baker Street, London"
-                        className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                      />
+                      ></Input>
                     </div>
                   </div>
                 </div>
@@ -136,53 +120,35 @@ export default function ProfilePage() {
                 method="POST"
               >
                 <div>
-                  <label
-                    htmlFor="current_password"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Current password
-                  </label>
+                  <Label>Current Password</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="current_password"
                       name="current_password"
                       type="password"
-                      className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                    />
+                    ></Input>
                   </div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="new_password"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    New password
-                  </label>
+                  <Label>New Password</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="new_password"
                       name="new_password"
                       type="password"
-                      className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                    />
+                    ></Input>
                   </div>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="new_password_confirmation"
-                    className="block text-sm font-medium text-foreground"
-                  >
-                    Confirm password
-                  </label>
+                  <Label>Confirm Password</Label>
                   <div className="mt-1">
-                    <input
+                    <Input
                       id="new_password_confirmation"
                       name="new_password_confirmation"
                       type="password"
-                      className="border px-2 py-3 focus:outline-none focus:ring-primary focus:border-primary block w-full sm:text-sm border-input rounded-md bg-background text-foreground"
-                    />
+                    ></Input>
                   </div>
                 </div>
 
