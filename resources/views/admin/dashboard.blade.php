@@ -3,8 +3,6 @@
 @section('title', 'Admin Dashboard')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
     <p class="mt-1 text-sm text-gray-600">Welcome back! Here's an overview of the system.</p>
@@ -165,51 +163,13 @@
 </div>
 
 <script>
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-
-    const statusChart = new Chart(statusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: @json($statusLabels),
-            datasets: [{
-                label: 'Report Status',
-                data: @json($statusCounts),
-                backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#6b7280'],
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                }
-            }
-        }
-    });
-
-    const categoryChart = new Chart(categoryCtx, {
-        type: 'bar',
-        data: {
-            labels: @json($categoryLabels),
-            datasets: [{
-                label: 'Reports per Category',
-                data: @json($categoryCounts),
-                backgroundColor: '#6366f1',
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    }
-                }
-            }
-        }
-    });
+    window.statusLabels = @json($statusLabels);
+    window.statusCounts = @json($statusCounts);
+    window.categoryLabels = @json($categoryLabels);
+    window.categoryCounts = @json($categoryCounts);
 </script>
+
+@vite('resources/js/chart.js')
+
 
 @endsection
