@@ -76,9 +76,7 @@ By default, it will be available at [http://localhost:8000](http://localhost:800
 * **Laravel**: A PHP framework for building modern web applications.
 * **Blade**: Laravel's templating engine for creating dynamic web pages.
 * **Tailwind CSS**: Utility-first CSS framework for building custom designs quickly.
-* **MySQL**: Relational database management system to store data.
-* **Laravel Sanctum**: Simple package for API token authentication.
-* **Laravel Breeze**: Simple authentication scaffold for Laravel.
+* **MariaDB**: Relational database management system to store data.
 
 ## Contributing
 
