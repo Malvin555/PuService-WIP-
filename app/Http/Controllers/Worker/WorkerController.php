@@ -9,6 +9,8 @@ use App\Models\Report;
 use App\Models\Category;
 use Auth;
 use Hash;
+use App\Notifications\UserAlertNotification;
+use Illuminate\Notifications\DatabaseNotification;
 
 class WorkerController extends Controller
 {
@@ -202,6 +204,60 @@ public function profile()
 
         return redirect()->route('worker.profile')->with('success', 'Password updated successfully.');
     }
+
+
+
+public function sendNotification(Request $request)
+{
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'message' => 'required|string|max:255',
+    ]);
+
+    $user = User::where('id', $request->user_id)->where('role', 'user')->first();
+
+    if (!$user) {
+        return back()->withErrors(['user_id' => 'Selected user is not a regular user.']);
+    }
+
+    $user->notify(new UserAlertNotification($request->message));
+
+    return back()->with('success', 'Notification sent to the user.');
+}
+
+public function notifications()
+{
+    // Fetch users with the role 'user'
+    $users = \App\Models\User::where('role', 'user')->get();
+
+    // Fetch notifications only for users with role = 'user'
+    $notifications = DatabaseNotification::whereHasMorph(
+        'notifiable',
+        [\App\Models\User::class],
+        function ($query) {
+            $query->where('role', 'user');
+        }
+    )
+    ->with('notifiable') // eager load the user who received the notification
+    ->latest()
+    ->get();
+
+    return view('worker.notifications.index', compact('users', 'notifications'));
+}
+
+
+public function deleteNotification($id)
+{
+    // Find the notification by its ID
+    $notification = DatabaseNotification::findOrFail($id);
+
+    // Delete the notification
+    $notification->delete();
+
+    return redirect()->back()->with('success', 'Notification deleted successfully');
+}
+
+
 
 
 

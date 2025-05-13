@@ -10,6 +10,8 @@ use Storage;
 use App\Models\Report;
 use App\Models\Category;
 
+use Illuminate\Notifications\Notifiable;
+
 
 class UserController extends Controller
 {
@@ -138,4 +140,17 @@ class UserController extends Controller
 
         return redirect()->route('user.profile')->with('success', 'Password updated successfully.');
     }
+
+   public function notifications()
+{
+    // Fetch all notifications
+    $notifications = auth()->user()->notifications;
+
+    // Mark all unread notifications as read after fetching
+    auth()->user()->unreadNotifications->markAsRead();
+
+    return view('user.notifications', compact('notifications'));
+}
+
+
 }

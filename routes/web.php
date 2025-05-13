@@ -78,6 +78,11 @@ Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
 
     Route::get('/admin/reports/print', [AdminController::class, 'generatePDF'])->name('admin.reports.print');
 
+    Route::get('/admin/notifications', [AdminController::class, 'notifications'])->name('admin.notifications');
+    Route::post('/admin/notifications/send', [AdminController::class, 'sendNotification'])->name('admin.send.notification');
+    Route::delete('/admin/notification/{id}', [AdminController::class, 'deleteNotification'])->name('admin.delete.notification');
+
+
 });
 
 Route::middleware([RoleMiddleware::class . ':worker'])->group(function () {
@@ -98,6 +103,10 @@ Route::middleware([RoleMiddleware::class . ':worker'])->group(function () {
 
     Route::get('/worker/users', [WorkerController::class, 'allUsers'])->name('worker.users.index');
 
+        Route::get('/worker/notifications', [WorkerController::class, 'notifications'])->name('worker.notifications');
+    Route::post('/worker/notifications/send', [WorkerController::class, 'sendNotification'])->name('worker.send.notification');
+    Route::delete('/worker/notification/{id}', [WorkerController::class, 'deleteNotification'])->name('worker.delete.notification');
+
 });
 
 Route::middleware([RoleMiddleware::class . ':user'])->group(function () {
@@ -108,9 +117,7 @@ Route::middleware([RoleMiddleware::class . ':user'])->group(function () {
     Route::post('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');
     Route::post('/user/profile/password', [UserController::class, 'updatePassword'])->name('user.password.update');
 
-    Route::get('/user/notifications', function () {
-        return view('user.notifications');
-    })->name('user.notifications');
+    Route::get('/user/notifications', [UserController::class, 'notifications'])->name('user.notifications');
 
     Route::get('/user/reports/new', [UserController::class, 'createReport'])->name('user.report.new');
     Route::post('/user/reports/store', [UserController::class, 'storeReport'])->name('user.report.store');
