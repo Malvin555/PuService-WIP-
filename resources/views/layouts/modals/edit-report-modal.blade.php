@@ -18,7 +18,7 @@
 
         <!-- Modal Content -->
         <div class="p-6 overflow-y-auto">
-            <form id="editForm" method="POST" action="{{ route('admin.reports.update', ['id' => $report->id]) }}">
+            <form id="editForm" method="POST" action="#">
                 @csrf
                 <input type="hidden" name="report_id" id="editReportId">
 
