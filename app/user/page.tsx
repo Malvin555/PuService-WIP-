@@ -12,24 +12,14 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 
+import { Card, CardContent } from "@/components/ui/card";
+
 export const metadata = {
   title: "PuService - User Dashboard",
   description: "User dashboard page",
 };
 
 export default function UserPage() {
-  // Mock data for recent reports
-  const reports = [
-    {
-      id: 1,
-      title: "Warning!!",
-      status: "Completed",
-      location: "221B Baker Street, London",
-      category: "Technology",
-      date: "17 August 2025",
-    },
-  ];
-
   return (
     <>
       <Nav />
@@ -51,7 +41,7 @@ export default function UserPage() {
             Quick Actions
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-10">
-            <Link href="user/report/new" className="block group">
+            <Link href="user/reports/new" className="block group">
               <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:border-primary transition-colors duration-200">
                 <div className="px-4 py-5 sm:p-6 text-center">
                   <div className="mx-auto inline-flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
@@ -67,7 +57,7 @@ export default function UserPage() {
               </div>
             </Link>
 
-            <Link href="/user/report/history" className="block group">
+            <Link href="/user/reports/history" className="block group">
               <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:border-primary transition-colors duration-200">
                 <div className="px-4 py-5 sm:p-6 text-center">
                   <div className="mx-auto inline-flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
@@ -120,58 +110,45 @@ export default function UserPage() {
           <h2 className="text-xl font-semibold text-foreground mb-5">
             Recent Reports
           </h2>
-          <div className="bg-card shadow-sm overflow-hidden rounded-md border border-border mb-10">
-            <ul role="list" className="divide-y divide-border">
-              {reports.length > 0 ? (
-                reports.map((report) => (
-                  <li key={report.id}>
-                    <Link
-                      href="/user/report/history"
-                      className="block hover:bg-accent"
-                    >
-                      <div className="px-4 py-4 sm:px-6">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium text-primary truncate">
-                            {report.title}
-                          </p>
-                          <div className="ml-2 flex-shrink-0 flex">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                              {report.status}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="mt-2 sm:flex sm:justify-between">
-                          <div className="sm:flex">
-                            <p className="flex items-center text-sm text-muted-foreground">
-                              <MapPinIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                              {report.location}
-                            </p>
-                            <p className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0 sm:ml-6">
-                              <InformationCircleIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                              {report.category}
-                            </p>
-                          </div>
-                          <div className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0">
-                            <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                            <p>
-                              Submitted on <time>{report.date}</time>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li className="px-4 py-5 text-center text-muted-foreground">
-                  No reports found
+          <Card className="bg-background shadow-sm rounded-md border border-border hover:bg-muted-foreground/10 transition-colors py-4">
+            <CardContent>
+              <ul className="divide-y divide-border">
+                <li className="rounded-md">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-primary truncate">
+                      Report Title
+                    </p>
+                    <div className="ml-2 flex-shrink-0 flex">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                        Resolved
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <div className="sm:flex">
+                      <p className="flex items-center text-sm text-muted-foreground">
+                        <MapPinIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
+                        123 Main Street
+                      </p>
+                      <p className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0 sm:ml-6">
+                        <InformationCircleIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
+                        Category Name
+                      </p>
+                    </div>
+                    <div className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0">
+                      <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
+                      <p>
+                        Submitted on <time>Jan 1, 2023</time>
+                      </p>
+                    </div>
+                  </div>
                 </li>
-              )}
-            </ul>
-          </div>
+              </ul>
+            </CardContent>
+          </Card>
 
           {/* View All Reports Button */}
-          <div className="text-center">
+          <div className="text-center m-5">
             <Link
               href="/dashboard/user/report/history"
               className="inline-flex items-center px-4 py-2 border border-input shadow-sm text-sm font-medium rounded-md text-foreground bg-card hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"

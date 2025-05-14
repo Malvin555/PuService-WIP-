@@ -44,9 +44,9 @@ export default function Nav() {
                 Dashboard
               </Link>
               <Link
-                href="/user/report/history"
+                href="/user/reports/history"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ease-in-out ${
-                  isActive("/user/report/history")
+                  isActive("/user/reports/history")
                     ? "text-foreground border-primary"
                     : "text-muted-foreground border-transparent hover:text-foreground hover:border-primary"
                 }`}
@@ -142,9 +142,9 @@ export default function Nav() {
               Dashboard
             </Link>
             <Link
-              href="/user/report/history"
+              href="/user/reports/history"
               className={`block pl-3 pr-4 py-2 border-l-4 ${
-                isActive("/user/report/history")
+                isActive("/user/reports/history")
                   ? "border-primary text-primary bg-primary/10"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
               } text-base font-medium`}
