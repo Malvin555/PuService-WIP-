@@ -84,7 +84,7 @@
               if (!sidebar.classList.contains('-translate-x-full')) {
                   const overlay = document.createElement('div');
                   overlay.id = 'sidebar-overlay';
-                  overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden';
+                  overlay.className = 'fixed inset-0 bg-black/50 bg-opacity-50 z-20 md:hidden';
                   document.body.appendChild(overlay);
                   
                   overlay.addEventListener('click', function() {

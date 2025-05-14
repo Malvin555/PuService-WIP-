@@ -5,18 +5,18 @@
     <!-- Add padding to account for fixed navbar -->
     <div class="pt-16">
         <!-- Hero Section -->
-        <section id="home" class="py-16 md:py-24 lg:py-32">
+        <section id="home"  class="py-16 md:py-24 lg:py-32">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="lg:grid lg:grid-cols-12 lg:gap-8">
                     <div class="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
-                        <h1>
+                        <h1 data-aos="fade-up">
                             <span class="block text-sm font-semibold uppercase tracking-wide text-gray-500">Introducing</span>
                             <span class="mt-1 block text-4xl tracking-tight font-extrabold sm:text-5xl xl:text-6xl">
                                 <span class="block text-gray-900">Modern Reporting</span>
                                 <span class="block text-blue-600">for a Better Country</span>
                             </span>
                         </h1>
-                        <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
+                        <p data-aos="fade-up" class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                             PuService provides comprehensive reporting solutions that help government agencies and citizens track, analyze, and improve public services.
                         </p>
                         <div class="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">

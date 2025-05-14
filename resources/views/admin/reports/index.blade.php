@@ -13,7 +13,7 @@
     <!-- Action Controls -->
     <div class="w-full md:w-auto">
         <form method="GET" action="{{ route('admin.reports.index') }}"
-              class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0 w-full">
+              class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 md:mr-4 space-y-3 sm:space-y-0 w-full">
             <!-- Add Report Button -->
             <button type="button" onclick="openModalAddReport()"
                     class="inline-flex justify-center items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -21,7 +21,7 @@
             </button>
 
             <!-- Print Button -->
-<a href="{{ route('admin.reports.print') }}" 
+<a href="{{ route('admin.reports.print', request()->query()) }}" target="_blank"
    class="inline-flex justify-center items-center px-4 py-2 bg-white text-gray-700 text-sm font-medium border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
     Download PDF
 </a>

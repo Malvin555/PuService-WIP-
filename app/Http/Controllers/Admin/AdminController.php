@@ -327,30 +327,35 @@ public function storeReport(Request $request)
 }
 
     public function generatePDF(Request $request)
-{
-    // Get the category from the request (if any)
-    $category = $request->input('category');  // Grabbing the category id from query parameters
+    {
+    $query = Report::with('user', 'category');
 
-    // Get reports based on the category (if provided), or all reports if no category filter is applied
-    if ($category) {
-        // If a category is provided, fetch reports belonging to that category
-        $reports = Report::where('category_id', $category)->with('category', 'user')->get();
-    } else {
-        // Otherwise, fetch all reports
-        $reports = Report::with('category', 'user')->get();
+    // Apply search filter
+    if ($request->has('search') && !empty($request->search)) {
+        $search = $request->input('search');
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%")
+              ->orWhereHas('user', function ($q) use ($search) {
+                  $q->where('name', 'like', "%{$search}%");
+              });
+        });
     }
-    
-    // Create an instance of mPDF
-    $mpdf = new Mpdf();
 
-    // Load the view and render the HTML, passing the reports
+    // Apply category filter
+    if ($request->has('category') && !empty($request->category)) {
+        $query->where('category_id', $request->category);
+    }
+
+    // Get the filtered data (no pagination for PDF)
+    $reports = $query->orderBy('created_at', 'desc')->get();
+
+    // Generate PDF
+    $mpdf = new \Mpdf\Mpdf();
     $html = view('mpdf.index', compact('reports'))->render();
-
-    // Write the HTML content to the PDF
     $mpdf->WriteHTML($html);
 
-    // Output the PDF to the browser (inline for viewing or you can download it)
-    return $mpdf->Output('report.pdf', 'I'); // 'I' stands for inline (open in browser)
+    return $mpdf->Output('report.pdf', 'I'); // inline view
 }
 
 public function sendNotification(Request $request)

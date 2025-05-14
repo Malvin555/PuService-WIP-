@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 13, 2025 at 06:55 AM
+-- Generation Time: May 13, 2025 at 05:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -151,7 +151,33 @@ CREATE TABLE `migrations` (
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '0001_01_01_000000_create_users_table', 1),
 (2, '0001_01_01_000001_create_cache_table', 1),
-(3, '0001_01_01_000002_create_jobs_table', 1);
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2025_05_13_141014_create_notifications_table', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` char(36) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `notifiable_type` varchar(255) NOT NULL,
+  `notifiable_id` bigint(20) UNSIGNED NOT NULL,
+  `data` text NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('62b21f39-2626-4a09-999c-6fca620b3440', 'App\\Notifications\\UserAlertNotification', 'App\\Models\\User', 30, '{\"message\":\"heloooooooooo\"}', NULL, '2025-05-13 06:25:00', '2025-05-13 06:25:00'),
+('82a52e6e-4e06-4708-b631-2acebc021f6b', 'App\\Notifications\\UserAlertNotification', 'App\\Models\\User', 31, '{\"message\":\"\\\"Thank you! We\'ve successfully received your report.\\\"\"}', '2025-05-13 07:06:28', '2025-05-13 07:00:52', '2025-05-13 07:06:28');
 
 -- --------------------------------------------------------
 
@@ -195,7 +221,7 @@ INSERT INTO `reports` (`id`, `user_id`, `category_id`, `title`, `description`, `
 (31, 31, 12, 'Limited Access to Technology in Small Villages', 'Desa Malang, a small rural village in East Java, faces significant challenges when it comes to the availability and use of technology. Despite the increasing importance of technology in daily life, the village lacks reliable internet access and modern digital tools. Many households still rely on traditional means of communication, and schools in the area are struggling to integrate technology into the classroom.', 'reports/02wxnU3spTLsc7MOFoTHN66NdmhSGiYIw7p4F3ha.jpg', 'Riverdale Village, JakartaDesa Malang, East Java', 'pending', NULL, '2025-05-12 20:41:56', '2025-05-12 20:41:56'),
 (32, 31, 13, 'Economic Challenges in Small Villages', 'Desa Maju, a small rural village located in Central Java, is facing significant economic challenges. The primary sources of income for the villagers are agriculture and small-scale local businesses, but both have been struggling due to various factors. Many of the farmers in the village rely on outdated farming techniques and have limited access to modern agricultural tools or fertilizers, leading to low crop yields.', 'reports/s2ZOvJbDay8rjL4YndZi7g3N28bI0wAM3euzt751.jpg', 'Desa Maju, Central Java', 'pending', NULL, '2025-05-12 20:43:13', '2025-05-12 20:43:13'),
 (33, 31, 17, 'Pollution in Urban Areas and Its Impact on Health', 'Jakarta, the capital city of Indonesia, faces severe environmental issues, with air pollution being one of the most pressing concerns. The high levels of air pollution are primarily caused by vehicle emissions, industrial waste, and the burning of fossil fuels. This pollution is not only harmful to the environment but also poses significant health risks to the population, especially children and the elderly. Respiratory diseases, asthma, and other health problems related to air quality have been on the rise, with hospitals reporting an increase in patients suffering from pollution-related conditions.', 'reports/3xp66CmzD5VtbsFUxudBJiDXsZ5ZCnTESncfS9tM.jpg', 'Jakarta, Indonesia', 'in_progress', NULL, '2025-05-12 20:44:22', '2025-05-12 20:51:08'),
-(34, 31, 15, 'Increasing Crime Rates and Public Safety Concerns', '.', 'reports/069TOFCzlGTKHOUhJ6ywonv9M0QOcJk6fvAvkzMl.jpg', 'Surabaya, Indonesia', 'resolved', 'Done!!!!!!!!!!!!s', '2025-05-12 20:45:42', '2025-05-12 20:54:56');
+(34, 31, 15, 'Increasing Crime Rates and Public Safety Concerns', '.', 'reports/069TOFCzlGTKHOUhJ6ywonv9M0QOcJk6fvAvkzMl.jpg', 'Surabaya, Indonesia', 'resolved', 'Done!!!!!!!!!!!!s', '2025-05-12 20:45:42', '2025-05-13 04:43:15');
 
 -- --------------------------------------------------------
 
@@ -231,8 +257,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('9EHhTeMFgyw5MXxAzDB61IHlccWMBmxYl7MJ6Syj', NULL, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVEo1VzdMeUkxcjYxOFVuVFlzQ1J0cTVjWXlScGY3UHN0TUxjeG1jUCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1747109933),
-('FRtKpLedVi5vMwwwv23VTySsLOqeq1oDreLL7Mft', 30, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWWx4U24zVFVpV1VRb2x2WUJxQnBYVmpMZHRWdVFxS01UQ0Y2dHJHYiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9yZXBvcnRzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MzA7fQ==', 1747112096);
+('fTxu5paAqkftCLUK6t4tX39KlJ9xGU0TRy81Fm0f', 32, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSlh6VUpJTlNMRElzTGpEblFLWnZSM0lwamFqNmpERUJaUXhzenY2YyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC93b3JrZXIiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozMjt9', 1747149049);
 
 -- --------------------------------------------------------
 
@@ -320,6 +345,13 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
+
+--
 -- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
@@ -370,7 +402,7 @@ ALTER TABLE `activity_logs`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -388,7 +420,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `reports`
