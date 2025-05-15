@@ -10,6 +10,7 @@ import {
   UsersIcon,
   BellIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Sidebar() {
   return (
@@ -19,10 +20,7 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className="flex items-center justify-center min-h-16 border-b border-border">
-        <a
-          href="{{ route('worker.dashboard') }}"
-          className="flex items-center gap-2"
-        >
+        <Link href="/worker" className="flex items-center gap-2">
           <span className="text-2xl font-semibold text-primary tracking-tight hidden sm:inline">
             PuService
           </span>
@@ -32,20 +30,20 @@ export default function Sidebar() {
           >
             Worker
           </Badge>
-        </a>
+        </Link>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-2 sm:px-4 py-6 space-y-2">
         <ul className="space-y-1">
           <li>
-            <a
-              href="{{ route('worker.dashboard') }}"
+            <Link
+              href="/worker"
               className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
             >
               <HomeIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
               <span className="hidden sm:inline">Dashboard</span>
-            </a>
+            </Link>
           </li>
         </ul>
 
@@ -56,40 +54,40 @@ export default function Sidebar() {
           <Separator className="my-2 hidden sm:block" />
           <ul className="space-y-1">
             <li>
-              <a
-                href="{{ url('/worker/reports') }}"
+              <Link
+                href="/worker/reports"
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
               >
                 <ClipboardIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 <span className="hidden sm:inline">All Reports</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="{{ url('/worker/reports/pending') }}"
+              <Link
+                href="/worker/reports/pending"
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 transition-colors group"
               >
                 <ClockIcon className="h-5 w-5 text-yellow-500 group-hover:text-yellow-700 transition-colors" />
                 <span className="hidden sm:inline">Pending</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="{{ url('/worker/reports/progress') }}"
+              <Link
+                href="/worker/reports/in-progress"
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-blue-700 hover:bg-blue-100 hover:text-blue-700 transition-colors group"
               >
                 <RefreshCcwIcon className="h-5 w-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
                 <span className="hidden sm:inline">In Progress</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="{{ url('/worker/reports/resolved') }}"
+              <Link
+                href="/worker/reports/resolved"
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-green-700 hover:bg-green-100 hover:text-green-700 transition-colors group"
               >
                 <CheckIcon className="h-5 w-5 text-green-500 group-hover:text-green-700 transition-colors" />
                 <span className="hidden sm:inline">Resolved</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -101,22 +99,22 @@ export default function Sidebar() {
           <Separator className="my-2 hidden sm:block" />
           <ul className="space-y-1">
             <li>
-              <a
-                href="{{ url('/worker/users') }}"
+              <Link
+                href="/worker/users"
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
               >
                 <UsersIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 <span className="hidden sm:inline">User Management</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="{{ route('worker.notifications') }}"
+              <Link
+                href="/worker/notifications"
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
               >
                 <BellIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 <span className="hidden sm:inline">Manage Notifications</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -140,12 +138,12 @@ export default function Sidebar() {
             <p className="text-sm sm:text-base font-semibold hidden sm:block">
               Malvin
             </p>
-            <a
-              href="{{ url('/worker/profile') }}"
+            <Link
+              href="/worker/profile"
               className="text-xs text-muted-foreground hover:text-primary transition-colors hidden sm:block"
             >
               View profile
-            </a>
+            </Link>
           </div>
         </div>
       </div>

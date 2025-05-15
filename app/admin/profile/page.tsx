@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/common/PageHeader";
 
-export default function ProfilePage() {
+export default function ProfilePageAdmin() {
   return (
     <>
       <PageHeader

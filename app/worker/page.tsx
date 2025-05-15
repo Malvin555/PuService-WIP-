@@ -10,17 +10,16 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import PageHeader from "@/components/common/PageHeader";
 
 export default function Page() {
   return (
     <>
       {/* Title */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-primary">Worker Dashboard</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Welcome back! Here an overview of your current reports and activities.
-        </p>
-      </div>
+      <PageHeader
+        title="Worker Dashboard"
+        description="Welcome back! Here an overview of your current reports and activities."
+      />
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -149,7 +148,7 @@ export default function Page() {
             <CardContent className="overflow-auto scrollbar-hide px-0">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="hover:bg-background">
                     {["ID", "Title", "Status", "Date", "Action"].map(
                       (header) => (
                         <TableHead
