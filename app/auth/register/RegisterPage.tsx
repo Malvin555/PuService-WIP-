@@ -9,9 +9,55 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Github, Twitter } from "lucide-react";
 import Footer from "@/components/layout/landing/footer";
 import Nav from "@/components/layout/landing/nav";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const router = useRouter();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    address: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || "Registration failed");
+      return;
+    }
+
+    router.push("/auth/login");
+  };
 
   return (
     <>
@@ -35,17 +81,20 @@ export default function RegisterPage() {
 
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-card py-8 px-4 shadow-sm sm:rounded-lg sm:px-10 border border-border">
-              <form className="space-y-6" action="#" method="POST">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6"
+                action="#"
+                method="POST"
+              >
                 <div>
                   <Label>Full Name</Label>
                   <div className="mt-1">
                     <Input
-                      id="name"
                       name="name"
                       type="text"
-                      autoComplete="name"
-                      required
                       placeholder="John Doe"
+                      onChange={handleChange}
                     ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
@@ -55,12 +104,10 @@ export default function RegisterPage() {
                   <Label>Email Address</Label>
                   <div className="mt-1">
                     <Input
-                      id="email"
                       name="email"
                       type="email"
-                      autoComplete="email"
-                      required
                       placeholder="john@doe.com"
+                      onChange={handleChange}
                     ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
@@ -70,11 +117,9 @@ export default function RegisterPage() {
                   <Label>Password</Label>
                   <div className="mt-1">
                     <Input
-                      id="password"
                       name="password"
                       type="password"
-                      autoComplete="new-password"
-                      required
+                      onChange={handleChange}
                     ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
@@ -84,11 +129,9 @@ export default function RegisterPage() {
                   <Label>Confirm Password</Label>
                   <div className="mt-1">
                     <Input
-                      id="password_confirmation"
-                      name="password_confirmation"
+                      name="confirmPassword"
                       type="password"
-                      autoComplete="new-password"
-                      required
+                      onChange={handleChange}
                     ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
@@ -136,6 +179,7 @@ export default function RegisterPage() {
                   >
                     Create Account
                   </Button>
+                  {error && <p className="text-red-500">{error}</p>}
                 </div>
               </form>
 

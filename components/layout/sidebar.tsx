@@ -12,7 +12,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default function Sidebar() {
+interface SidebarProps {
+  role: "admin" | "worker";
+}
+
+// The error is likely caused by the use of multiple <li> elements inside a JSX conditional without a single parent element.
+// In JSX, when using a conditional to render multiple sibling elements, they must be wrapped in a single parent (like a fragment <>...</>).
+
+export default function Sidebar({ role }: SidebarProps) {
+  const isAdmin = role === "admin";
   return (
     <div
       id="sidebar"
@@ -20,7 +28,7 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className="flex items-center justify-center min-h-16 border-b border-border">
-        <Link href="/worker" className="flex items-center gap-2">
+        <Link href={`/${role}`} className="flex items-center gap-2">
           <span className="text-2xl font-semibold text-primary tracking-tight hidden sm:inline">
             PuService
           </span>
@@ -28,7 +36,7 @@ export default function Sidebar() {
             variant="outline"
             className="text-xs font-semibold text-muted-foreground px-2 py-0.5 hidden sm:inline"
           >
-            Worker
+            {role.charAt(0).toUpperCase() + role.slice(1)}
           </Badge>
         </Link>
       </div>
@@ -38,7 +46,7 @@ export default function Sidebar() {
         <ul className="space-y-1">
           <li>
             <Link
-              href="/worker"
+              href={`/${role}`}
               className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
             >
               <HomeIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -55,40 +63,45 @@ export default function Sidebar() {
           <ul className="space-y-1">
             <li>
               <Link
-                href="/worker/reports"
+                href={`/${role}/reports`}
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
               >
                 <ClipboardIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 <span className="hidden sm:inline">All Reports</span>
               </Link>
             </li>
-            <li>
-              <Link
-                href="/worker/reports/pending"
-                className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 transition-colors group"
-              >
-                <ClockIcon className="h-5 w-5 text-yellow-500 group-hover:text-yellow-700 transition-colors" />
-                <span className="hidden sm:inline">Pending</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/worker/reports/in-progress"
-                className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-blue-700 hover:bg-blue-100 hover:text-blue-700 transition-colors group"
-              >
-                <RefreshCcwIcon className="h-5 w-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
-                <span className="hidden sm:inline">In Progress</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/worker/reports/resolved"
-                className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-green-700 hover:bg-green-100 hover:text-green-700 transition-colors group"
-              >
-                <CheckIcon className="h-5 w-5 text-green-500 group-hover:text-green-700 transition-colors" />
-                <span className="hidden sm:inline">Resolved</span>
-              </Link>
-            </li>
+
+            {!isAdmin && (
+              <>
+                <li>
+                  <Link
+                    href={`/${role}/reports/pending`}
+                    className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 transition-colors group"
+                  >
+                    <ClockIcon className="h-5 w-5 text-yellow-500 group-hover:text-yellow-700 transition-colors" />
+                    <span className="hidden sm:inline">Pending</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`/${role}/reports/in-progress`}
+                    className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-blue-700 hover:bg-blue-100 hover:text-blue-700 transition-colors group"
+                  >
+                    <RefreshCcwIcon className="h-5 w-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
+                    <span className="hidden sm:inline">In Progress</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`/${role}/reports/resolved`}
+                    className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-green-700 hover:bg-green-100 hover:text-green-700 transition-colors group"
+                  >
+                    <CheckIcon className="h-5 w-5 text-green-500 group-hover:text-green-700 transition-colors" />
+                    <span className="hidden sm:inline">Resolved</span>
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
 
@@ -100,7 +113,7 @@ export default function Sidebar() {
           <ul className="space-y-1">
             <li>
               <Link
-                href="/worker/users"
+                href={`/${role}/users`}
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
               >
                 <UsersIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -109,7 +122,7 @@ export default function Sidebar() {
             </li>
             <li>
               <Link
-                href="/worker/notifications"
+                href={`/${role}/notifications`}
                 className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
               >
                 <BellIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -139,7 +152,7 @@ export default function Sidebar() {
               Malvin
             </p>
             <Link
-              href="/worker/profile"
+              href={`/${role}/profile`}
               className="text-xs text-muted-foreground hover:text-primary transition-colors hidden sm:block"
             >
               View profile

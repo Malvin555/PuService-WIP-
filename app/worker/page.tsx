@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import PageHeader from "@/components/common/PageHeader";
 
-export default function Page() {
+export default function WorkerDashboard() {
   return (
     <>
       {/* Title */}

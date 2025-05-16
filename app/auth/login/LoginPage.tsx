@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Github, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,12 +7,56 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Nav from "@/components/layout/landing/nav";
 import Footer from "@/components/layout/landing/footer";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const metadata = {
   title: "PuService - Login",
 };
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || "Login failed");
+      return;
+    }
+
+    // Save token to localStorage
+    localStorage.setItem("token", data.token);
+
+    // Redirect based on role
+    if (data.user.role === "admin") {
+      router.push("/admin");
+    } else if (data.user.role === "worker") {
+      router.push("/worker");
+    } else {
+      router.push("/user");
+    }
+  };
   return (
     <>
       <Nav />
@@ -33,17 +79,20 @@ export default function LoginPage() {
 
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-card py-8 px-4 shadow-sm sm:rounded-lg sm:px-10 border border-border">
-              <form className="space-y-6" action="#" method="POST">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6"
+                action="#"
+                method="POST"
+              >
                 <div>
                   <Label>Email Address</Label>
                   <div className="mt-1">
                     <Input
-                      id="email"
                       name="email"
                       type="email"
-                      autoComplete="email"
-                      required
                       placeholder="your@email.com"
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
@@ -53,11 +102,9 @@ export default function LoginPage() {
                   <Label>Password</Label>
                   <div className="mt-1">
                     <Input
-                      id="password"
                       name="password"
                       type="password"
-                      autoComplete="current-password"
-                      required
+                      onChange={handleChange}
                     ></Input>
                   </div>
                   <div className="min-h-[20px] text-destructive"></div>
@@ -66,6 +113,11 @@ export default function LoginPage() {
                 <div className="flex">
                   <Button className="w-full">Submit</Button>
                 </div>
+                {error && (
+                  <div className="mt-3 p-2 bg-destructive/10 rounded-md border border-destructive text-center text-destructive text-sm font-medium">
+                    {error}
+                  </div>
+                )}
               </form>
 
               <div className="mt-6">

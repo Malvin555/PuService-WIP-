@@ -7,14 +7,18 @@ import Footer from "@/components/layout/footer";
 
 type DashboardLayoutProps = {
   children: ReactNode;
+  role: "admin" | "worker";
 };
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  children,
+  role,
+}: DashboardLayoutProps) {
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
       <aside className="md:flex md:w-64 border-r border-border flex-shrink-0">
-        <Sidebar />
+        <Sidebar role={role} />
       </aside>
 
       {/* Main content */}

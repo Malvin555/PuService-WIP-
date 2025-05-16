@@ -11,5 +11,5 @@ export default function WorkerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return <DashboardLayout role="admin">{children}</DashboardLayout>;
 }
