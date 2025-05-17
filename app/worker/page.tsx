@@ -18,7 +18,7 @@ export default function WorkerDashboard() {
       {/* Title */}
       <PageHeader
         title="Worker Dashboard"
-        description="Welcome back! Here an overview of your current reports and activities."
+        description="Welcome back ! Here an overview of your current reports and activities."
       />
 
       {/* Stats Overview */}

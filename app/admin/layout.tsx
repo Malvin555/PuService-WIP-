@@ -1,4 +1,6 @@
-import DashboardLayout from "@/components/layout/dashboard";
+import DashboardLayout from "@/components/layout/dashboard/dashboard";
+
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export const metadata = {
   title: "PuService - Admin",
@@ -6,10 +8,15 @@ export const metadata = {
     "Admin dashboard for PuService to oversee users, manage system settings, and monitor reports.",
 };
 
-export default function WorkerLayout({
+export default async function WorkerLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <DashboardLayout role="admin">{children}</DashboardLayout>;
+  const user = await getCurrentUser();
+  return (
+    <DashboardLayout role="admin" user={user}>
+      {children}
+    </DashboardLayout>
+  );
 }

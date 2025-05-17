@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/landing/nav";
-import Footer from "@/components/layout/landing/footer";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,7 +13,6 @@ export default function PrivacyPolicyPage() {
 
   return (
     <>
-      <Nav />
       <div className="pt-16">
         {/* Header Section */}
         <section className="bg-primary text-primary-foreground">
@@ -301,7 +298,6 @@ export default function PrivacyPolicyPage() {
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 }

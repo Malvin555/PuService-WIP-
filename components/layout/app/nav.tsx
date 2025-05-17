@@ -5,10 +5,16 @@ import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import ProfileDropdown from "@/components/common/ProfileDropdown";
 
 const sections = ["home", "feature", "about"];
 
-export default function NavigationMenu() {
+interface NavbarProps {
+  role: "user" | "null";
+  user: { name: string } | null;
+}
+
+export default function NavigationMenu({ role, user }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const pathname = usePathname();
@@ -17,6 +23,10 @@ export default function NavigationMenu() {
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const isActive = (path: string) => {
+    return pathname === path;
   };
 
   useEffect(() => {
@@ -39,6 +49,7 @@ export default function NavigationMenu() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isUser = role === "user";
   return (
     <nav className="fixed w-full z-50 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,7 +60,7 @@ export default function NavigationMenu() {
                 PuService
               </span>
             </Link>
-            {!shouldHideNav && (
+            {!shouldHideNav && !isUser && (
               <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
                 {sections.map((id) => (
                   <a
@@ -66,18 +77,50 @@ export default function NavigationMenu() {
                 ))}
               </div>
             )}
-          </div>
-          <div className="hidden sm:flex sm:items-center sm:space-x-2">
-            <Link href="/auth/login">
-              <Button variant={"ghost"} className="hover:bg-transparent">
-                Login
-              </Button>
-            </Link>
 
-            <Link href="/auth/register">
-              <Button className="h-11 px-8">Register</Button>
-            </Link>
+            {/* User Menu Role */}
+            {!shouldHideNav && isUser && (
+              <>
+                <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
+                  <Link
+                    href="/user"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ease-in-out ${
+                      isActive("/user")
+                        ? "text-foreground border-primary"
+                        : "text-muted-foreground border-transparent hover:text-foreground hover:border-primary"
+                    }`}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/user/reports/history"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ease-in-out ${
+                      isActive("/user/reports/history")
+                        ? "text-foreground border-primary"
+                        : "text-muted-foreground border-transparent hover:text-foreground hover:border-primary"
+                    }`}
+                  >
+                    History
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
+          {/* Right side: login/register only if not user */}
+          {isUser && user ? (
+            <ProfileDropdown user={user} />
+          ) : (
+            <div className="hidden sm:flex sm:items-center sm:space-x-2">
+              <Link href="/auth/login">
+                <Button variant="ghost" className="hover:bg-transparent">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/auth/register">
+                <Button className="h-11 px-8">Register</Button>
+              </Link>
+            </div>
+          )}
           <div className="-mr-2 flex items-center sm:hidden">
             <button
               onClick={toggleMobileMenu}

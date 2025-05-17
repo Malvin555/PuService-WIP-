@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import User from "@/models/User";
 import { connectToMongoDB } from "@/lib/db";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -14,53 +14,47 @@ export async function POST(req: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: "Missing email or password" },
+        { error: "Email and password are required." },
         { status: 400 },
       );
     }
 
     const user = await User.findOne({ email });
-    if (!user) {
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return NextResponse.json(
-        { error: "Invalid credentials" },
+        { error: "Invalid email or password." },
         { status: 401 },
       );
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 },
-      );
-    }
+    const tokenPayload = {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
 
-    // ✅ Create token
-    const token = jwt.sign(
-      {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-      JWT_SECRET,
-      { expiresIn: "7d" }, // valid for 7 days
-    );
+    const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: "1h" });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Login successful",
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: tokenPayload,
     });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // secure in prod only
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60, // 1 hour
+    });
+
+    return response;
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Something went wrong. Please try again." },
       { status: 500 },
     );
   }

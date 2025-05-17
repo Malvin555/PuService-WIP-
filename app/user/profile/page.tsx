@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/user/nav";
-import Footer from "@/components/layout/landing/footer";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +10,6 @@ export const metadata = {
 export default function ProfilePage() {
   return (
     <>
-      <Nav />
       <div className="pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="mb-8">
@@ -160,7 +157,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

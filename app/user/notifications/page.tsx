@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/user/nav";
-import Footer from "@/components/layout/landing/footer";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
@@ -8,7 +6,6 @@ import { Info, CheckCircle, AlertTriangle, Bell, ThumbsUp } from "lucide-react";
 export default function NotificationsPage() {
   return (
     <>
-      <Nav />
       <div className="pt-16">
         <div className="container mx-auto px-4 py-10">
           <div className="mb-8">
@@ -157,7 +154,6 @@ export default function NotificationsPage() {
           </Card>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

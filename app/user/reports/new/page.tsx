@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/user/nav";
-import Footer from "@/components/layout/landing/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +19,6 @@ export const metadata = {
 export default function NewReportPage() {
   return (
     <>
-      <Nav />
       <main className="pt-16">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <header className="mb-8">
@@ -151,7 +148,6 @@ export default function NewReportPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

@@ -5,8 +5,6 @@ import { Github, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Nav from "@/components/layout/landing/nav";
-import Footer from "@/components/layout/landing/footer";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -17,49 +15,45 @@ export const metadata = {
 export default function LoginPage() {
   const router = useRouter();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+    const [form, setForm] = useState({ email: "", password: "" });
+    const [error, setError] = useState("");
 
-  const [error, setError] = useState("");
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setForm((prev) => ({ ...prev, [name]: value }));
+    };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+          credentials: "include", // required to set HTTP-only cookie
+        });
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+        const data = await res.json();
 
-    const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || "Login failed");
+          return;
+        }
 
-    if (!res.ok) {
-      setError(data.error || "Login failed");
-      return;
-    }
-
-    // Save token to localStorage
-    localStorage.setItem("token", data.token);
-
-    // Redirect based on role
-    if (data.user.role === "admin") {
-      router.push("/admin");
-    } else if (data.user.role === "worker") {
-      router.push("/worker");
-    } else {
-      router.push("/user");
-    }
-  };
-  return (
+        // Role-based redirection
+        const role = data.user?.role;
+        if (role === "admin") router.push("/admin");
+        else if (role === "worker") router.push("/worker");
+        else router.push("/user");
+      } catch (err) {
+        console.error("Login error:", err);
+        setError("Something went wrong. Please try again.");
+      }
+    };
+    return (
     <>
-      <Nav />
       <div className="min-h-screen bg-background">
         <div className="flex flex-col justify-center py-20 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -156,7 +150,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

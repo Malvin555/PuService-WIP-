@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/user/nav";
-import Footer from "@/components/layout/landing/footer";
 import Link from "next/link";
 import {
   PlusIcon,
@@ -13,21 +11,22 @@ import {
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export const metadata = {
   title: "PuService - User Dashboard",
   description: "User dashboard page",
 };
 
-export default function UserPage() {
+export default async function UserPage() {
+  const user = await getCurrentUser();
   return (
     <>
-      <Nav />
       <div className="pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground">
-              Welcome back, Malvin!
+              Welcome back, {user?.name ?? "Guest"}!!
             </h1>
             <p className="mt-2 text-lg text-muted-foreground">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum id
@@ -159,7 +158,6 @@ export default function UserPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

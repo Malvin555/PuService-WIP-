@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Github, Twitter } from "lucide-react";
-import Footer from "@/components/layout/landing/footer";
-import Nav from "@/components/layout/landing/nav";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
@@ -61,7 +59,6 @@ export default function RegisterPage() {
 
   return (
     <>
-      <Nav />
       <div className="min-h-screen bg-background">
         <div className="min-h-screen flex flex-col justify-center py-20 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -219,7 +216,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

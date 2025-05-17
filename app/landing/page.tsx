@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/landing/nav";
-import Footer from "@/components/layout/landing/footer";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,7 +13,6 @@ import {
 export default function HomePage() {
   return (
     <>
-      <Nav />
       <div className="min-h-screen bg-background">
         {/* Home Section */}
         <section
@@ -239,7 +236,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 }

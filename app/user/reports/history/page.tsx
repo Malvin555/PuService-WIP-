@@ -1,5 +1,3 @@
-import Nav from "@/components/layout/user/nav";
-import Footer from "@/components/layout/landing/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,7 +21,6 @@ import {
 export default function ReportHistoryPage() {
   return (
     <>
-      <Nav />
       <div className="pt-16">
         <div className="container mx-auto px-4 py-10">
           <div className="mb-8">
@@ -176,7 +173,6 @@ export default function ReportHistoryPage() {
           </nav>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

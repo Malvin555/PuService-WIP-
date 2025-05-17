@@ -1,31 +1,36 @@
 "use client";
 
-import { ReactNode } from "react";
-import Sidebar from "@/components/layout/sidebar";
-import Navbar from "@/components/layout/navigation";
-import Footer from "@/components/layout/footer";
+import Sidebar from "@/components/layout/dashboard/sidebar";
+import Navbar from "@/components/layout/dashboard/navigation";
+import Footer from "@/components/layout/dashboard/footer";
+
+type User = {
+  name: string;
+};
 
 type DashboardLayoutProps = {
-  children: ReactNode;
+  children: React.ReactNode;
   role: "admin" | "worker";
+  user: User | null;
 };
 
 export default function DashboardLayout({
   children,
   role,
+  user,
 }: DashboardLayoutProps) {
   return (
     <div className="flex min-h-screen bg-background text-foreground">
       {/* Sidebar */}
       <aside className="md:flex md:w-64 border-r border-border flex-shrink-0">
-        <Sidebar role={role} />
+        <Sidebar user={user} role={role} />
       </aside>
 
       {/* Main content */}
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top navbar */}
         <header className="sticky top-0 z-30 bg-background h-16 border-b">
-          <Navbar />
+          <Navbar user={user} />
         </header>
 
         {/* Page content */}

@@ -14,13 +14,23 @@ import Link from "next/link";
 
 interface SidebarProps {
   role: "admin" | "worker";
+  user: { name: string } | null;
 }
 
-// The error is likely caused by the use of multiple <li> elements inside a JSX conditional without a single parent element.
-// In JSX, when using a conditional to render multiple sibling elements, they must be wrapped in a single parent (like a fragment <>...</>).
+export default function Sidebar({ user, role }: SidebarProps) {
+  if (!user?.name) return null;
+  // Generate initials from name
+  const initials = (() => {
+    const parts = user.name.trim().split(" ");
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    } else {
+      return parts[0][0].toUpperCase() + parts[1][0].toUpperCase();
+    }
+  })();
 
-export default function Sidebar({ role }: SidebarProps) {
   const isAdmin = role === "admin";
+
   return (
     <div
       id="sidebar"
@@ -136,7 +146,7 @@ export default function Sidebar({ role }: SidebarProps) {
       {/* Profile Section */}
       <div className="border-t border-border p-2 sm:p-4">
         <div className="flex items-center px-2">
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-9 w-9">
             <AvatarImage src="" alt="User" />
             <AvatarFallback
               style={{
@@ -144,12 +154,12 @@ export default function Sidebar({ role }: SidebarProps) {
                 color: "var(--primary-foreground)",
               }}
             >
-              Ma
+              {initials}
             </AvatarFallback>
           </Avatar>
           <div className="ml-2 sm:ml-3">
-            <p className="text-sm sm:text-base font-semibold hidden sm:block">
-              Malvin
+            <p className="text-sm capitalize sm:text-base font-semibold hidden sm:block">
+              {user.name}
             </p>
             <Link
               href={`/${role}/profile`}
