@@ -1,26 +1,35 @@
-# PuService - Laravel Application
+# PuService - Laravel Version (`laravel-version` branch)
 
-PuService is a role-based web application built using **Laravel**. It is designed to manage different user roles, including **Admin**, **User**, and **Worker**, with dynamic dashboards and a secure authentication system. This app is optimized for scalable user management and role-based content presentation.
+**PuService** is a role-based issue reporting web application built with **Laravel**. It includes three user roles — **Admin**, **User**, and **Worker** — each with its own dashboard and access permissions. This version offers a robust backend foundation using Laravel's MVC structure, middleware, and Blade templating.
 
-## Key Features
+---
 
-* **Landing Page**: Public-facing pages including Home, About, and Contact.
-* **Authentication**: Secure login, registration, and password recovery.
-* **Role-Based Dashboards**:
+## 🚀 Features
 
-  * **Admin Dashboard**: Manage users, reports, and settings.
-  * **User Dashboard**: Manage profiles, view reports, and settings.
-  * **Worker Dashboard**: Manage tasks and settings.
-* **Role Protection**: Middleware ensures routes are protected based on user roles.
+- **Public Landing Pages**  
+  Includes Home, About, and Contact pages accessible without authentication.
 
-## Getting Started
+- **Secure Authentication System**  
+  Login, registration, and password recovery out of the box.
+
+- **Role-Based Dashboards**  
+  - **Admin**: Manage users, reports, and system settings  
+  - **User**: Submit/view reports, manage profile and preferences  
+  - **Worker**: View assigned tasks and manage task status
+
+- **Route Protection via Middleware**  
+  Ensures users can only access pages permitted by their role
+
+---
+
+## 🛠️ Getting Started
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Malvin555/PuService.git
+git clone -b laravel-version https://github.com/Malvin555/PuService.git
 cd PuService
-```
+````
 
 ### 2. Install Dependencies
 
@@ -28,11 +37,9 @@ cd PuService
 composer install
 ```
 
-This will install all necessary dependencies using Composer.
+### 3. Configure Environment
 
-### 3. Configure Environment Variables
-
-Laravel uses an `.env` file for configuration. Copy the `.env.example` file to `.env`:
+Copy the example `.env` file:
 
 ```bash
 cp .env.example .env
@@ -44,7 +51,7 @@ Generate the application key:
 php artisan key:generate
 ```
 
-Next, set up the database and environment variables. You can use `.env` to configure your app:
+Configure your database and app settings inside `.env`:
 
 ```
 APP_NAME=PuService
@@ -57,36 +64,52 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=your_database_name
-DB_USERNAME=your_database_username
-DB_PASSWORD=your_database_password
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 ```
 
 ### 4. Run the Development Server
-
-You can now serve the Laravel app locally:
 
 ```bash
 php artisan serve
 ```
 
-By default, it will be available at [http://localhost:8000](http://localhost:8000).
+Access the app at: [http://localhost:8000](http://localhost:8000)
 
-## Technologies Used
+---
 
-* **Laravel**: A PHP framework for building modern web applications.
-* **Blade**: Laravel's templating engine for creating dynamic web pages.
-* **Tailwind CSS**: Utility-first CSS framework for building custom designs quickly.
-* **MariaDB**: Relational database management system to store data.
+## 🧰 Tech Stack
 
-## Contributing
+* **Laravel** – PHP framework for scalable backend development
+* **Blade** – Laravel's built-in templating engine
+* **Tailwind CSS** – Utility-first CSS framework for styling
+* **MariaDB / MySQL** – Relational database for structured data
 
-We welcome contributions! To contribute:
+---
 
-1. Fork the repository.
-2. Create a new branch for your feature or bugfix.
-3. Write tests if applicable.
-4. Submit a pull request with a detailed description of your changes.
+## 🌱 Contributing
 
-## License
+1. Fork this repository
+2. Create a new branch (`feature/your-feature` or `fix/your-fix`)
+3. Write your code and commit it
+4. Submit a pull request with a detailed description
 
-This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for more information.
+---
+
+## 📄 License
+
+This project is licensed under the **Occ-1.0** license.
+See the [LICENSE](LICENSE) file for full details.
+
+---
+
+## 🔀 Other Versions
+
+Looking for the **Next.js version**?
+Switch to the `main` branch:
+
+```bash
+git checkout main
+```
+
+Each version is maintained separately in its own branch.
