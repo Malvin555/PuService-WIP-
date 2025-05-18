@@ -1,26 +1,35 @@
-# PuService - Next.js Application
+# PuService - Next.js Version (Main Branch)
 
-PuService is a role-based web application built using **Next.js**. It is designed to manage different user roles including **Admin**, **User**, and **Worker**, with dynamic dashboards and a secure authentication system. This app is optimized for scalable user management and role-based content presentation.
+PuService is a role-based issue reporting web application built with **Next.js**. It supports three user roles — **Admin**, **User**, and **Worker** — each with its own dashboard and permissions. This version is the primary implementation of the app, focused on scalability, security, and modern web technologies.
 
-## Key Features
+---
 
-* **Landing Page**: Public-facing pages including Home, About, and Contact.
-* **Authentication**: Secure login, registration, and password recovery.
-* **Role-Based Dashboards**:
+## 🚀 Features
 
-  * Admin dashboard for managing users, reports, and settings.
-  * User dashboard for managing profiles, viewing reports, and settings.
-  * Worker dashboard for task management and settings.
-* **Role Protection**: Middleware that ensures routes are protected based on user roles.
+- **Public Landing Pages**  
+  Includes Home, About, and Contact pages accessible without authentication.
 
-## Getting Started
+- **Secure Authentication System**  
+  Login, registration, and password recovery using NextAuth.js and JWT.
+
+- **Role-Based Dashboards**  
+  - **Admin**: Manage users, reports, and settings  
+  - **User**: Submit and view reports, manage profile and settings  
+  - **Worker**: Access assigned tasks and update progress
+
+- **Access Control Middleware**  
+  Route protection based on user roles for secure access management
+
+---
+
+## 🛠️ Getting Started
 
 ### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Malvin555/PuService.git
 cd PuService
-```
+````
 
 ### 2. Install Dependencies
 
@@ -28,48 +37,62 @@ cd PuService
 npm install
 ```
 
-3. Configure Environment Variables
+### 3. Configure Environment Variables
 
-Next.js 14 handles environment variables via the Next.js environment configuration API. To configure the app:
+Set your environment variables locally in `.env.local`, or through your hosting platform (e.g., Vercel).
 
-    Set up environment variables in the hosting provider, such as Vercel, or
+Example:
 
-    If running locally, use the system environment directly or store them in your cloud provider's settings.
+```
+MONGODB_URI=your_database_connection_string
+JWT_SECRET=your_auth_secret
+```
 
-For example:
+> ⚠️ Never commit sensitive variables to source control.
 
-    NEXT_PUBLIC_API_URL: Your backend API URL.
-
-    DATABASE_URL: Connection string to your database.
-
-    AUTH_SECRET: Secret used for authentication.
-
-### 4. Run the Development Server
+### 4. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
-You can now access the app at [http://localhost:3000](http://localhost:3000).
+Visit: [http://localhost:3000](http://localhost:3000)
 
-## Technologies Used
+---
 
-* **Next.js**: A React framework for building server-side rendered and static web applications.
-* **Tailwind CSS**: Utility-first CSS framework for building custom designs quickly.
-* **TypeScript**: Type-safe JavaScript for enhanced developer tooling and better maintainability.
-* **Prisma**: ORM to facilitate easy database interactions.
-* **NextAuth.js**: Authentication library for Next.js with support for JWT, OAuth, and email-based sign-ins.
-* **JWT**: JSON Web Tokens for session management.
+## 🧰 Tech Stack
 
-## Contributing
+* **Next.js** – React-based framework with SSR & static rendering
+* **Tailwind CSS** – Utility-first CSS styling
+* **TypeScript** – Static typing for reliability
+* **MongoDB** – Standard database
+* **JWT** – JSON Web Token for secure sessions
 
-We welcome contributions! To contribute:
+---
 
-1. Fork the repository.
-2. Create a new branch for your feature or bugfix.
-3. Write tests if applicable.
-4. Submit a pull request with a detailed description of your changes.
+## 🗂 Laravel Version
 
-## License
+Looking for the **Laravel implementation**?
+Switch to the `laravel-version` branch:
 
-This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for more information.
+```bash
+git checkout laravel-version
+```
+
+Each version is maintained separately within its respective branch.
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a branch (`feature/your-feature` or `fix/your-bug`)
+3. Commit and push your changes
+4. Open a pull request
+
+---
+
+## 📄 License
+
+Licensed under the **CCO-1.0**.
+See the LICENSE file for more information.
