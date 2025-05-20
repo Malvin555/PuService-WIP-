@@ -17,20 +17,32 @@ import {
   CircleIcon as InformationCircleIcon,
   CalendarIcon,
 } from "lucide-react";
+import PageHeader from "@/components/common/PageHeader";
+import { getCurrentUser } from "@/lib/getCurrentUser";
+import { getUserReports } from "@/lib/getUserReport";
 
-export default function ReportHistoryPage() {
+interface UserReport {
+  _id: string;
+  title: string;
+  status: string;
+  address: string;
+  createdAt: string;
+  categoryId?: {
+    name?: string;
+  };
+}
+
+export default async function ReportHistoryPage() {
+  const user = await getCurrentUser();
+  const recentReports = await getUserReports(user!.id, 5);
   return (
     <>
       <div className="pt-16">
-        <div className="container mx-auto px-4 py-10">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">
-              Your Report History
-            </h1>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Track the status of all your submitted reports.
-            </p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <PageHeader
+            title="Your Report History"
+            description="Track the status of all your submitted reports."
+          />
 
           {/* Filters */}
           <Card className="bg-background shadow-md rounded-lg border border-border mb-6">
@@ -96,17 +108,28 @@ export default function ReportHistoryPage() {
           </Card>
 
           {/* Reports List */}
-          <Card className="bg-background shadow-sm rounded-md border border-border hover:bg-muted-foreground/10 transition-colors py-4">
-            <CardContent>
-              <ul className="divide-y divide-border">
-                <li className="rounded-md">
+          {recentReports.length === 0 ? (
+            <Card className="bg-background shadow-sm rounded-md border border-border py-4">
+              <CardContent>
+                <p className="text-sm text-muted-foreground text-center">
+                  No reports submitted yet.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            recentReports.map((report: UserReport) => (
+              <Card
+                key={report._id}
+                className="bg-background shadow-sm rounded-md border border-border hover:bg-muted-foreground/10 transition-colors py-4 mb-4"
+              >
+                <CardContent>
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-primary truncate">
-                      Report Title
+                      {report.title}
                     </p>
                     <div className="ml-2 flex-shrink-0 flex">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                        Resolved
+                      <span className="px-2 capitalize inline-flex text-xs leading-5 font-semibold rounded-full">
+                        {report.status}
                       </span>
                     </div>
                   </div>
@@ -114,24 +137,27 @@ export default function ReportHistoryPage() {
                     <div className="sm:flex">
                       <p className="flex items-center text-sm text-muted-foreground">
                         <MapPinIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                        123 Main Street
+                        {report.address}
                       </p>
                       <p className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0 sm:ml-6">
                         <InformationCircleIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                        Category Name
+                        {report.categoryId?.name ?? "Uncategorized"}
                       </p>
                     </div>
                     <div className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0">
                       <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
                       <p>
-                        Submitted on <time>Jan 1, 2023</time>
+                        Submitted on{" "}
+                        <time>
+                          {new Date(report.createdAt).toLocaleDateString()}
+                        </time>
                       </p>
                     </div>
                   </div>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            ))
+          )}
 
           {/* Pagination */}
           <nav className="flex items-center justify-between border-t border-border mt-6 pt-4">

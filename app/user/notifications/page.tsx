@@ -2,20 +2,17 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Info, CheckCircle, AlertTriangle, Bell, ThumbsUp } from "lucide-react";
+import PageHeader from "@/components/common/PageHeader";
 
 export default function NotificationsPage() {
   return (
     <>
       <div className="pt-16">
-        <div className="container mx-auto px-4 py-10">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">
-              Notifications
-            </h1>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Stay updated on your reports and service announcements.
-            </p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <PageHeader
+            title="Notifications"
+            description="Stay updated on your reports and service announcements"
+          />
 
           <Card className="w-full shadow-md">
             <CardHeader>

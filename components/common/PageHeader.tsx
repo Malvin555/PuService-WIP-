@@ -20,7 +20,7 @@ export default function PageHeader({
   description,
   className = "mb-6",
   titleClassName,
-  descriptionClassName = "mt-2 text-sm text-muted-foreground",
+  descriptionClassName = "mt-2 text-md text-muted-foreground",
   withSearch = false,
   searchPlaceholder = "Search...",
   searchName = "search",

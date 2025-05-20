@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import PageHeader from "@/components/common/PageHeader";
 
 export const metadata = {
   title: "PuService - User Profile",
@@ -12,12 +13,10 @@ export default function ProfilePage() {
     <>
       <div className="pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">Your Profile</h1>
-            <p className="mt-2 text-lg text-muted-foreground">
-              Manage your account information and preferences.
-            </p>
-          </div>
+          <PageHeader
+            title="Your Profile"
+            description="Manage your account information and preferences."
+          />
 
           <div className="bg-card shadow-sm overflow-hidden rounded-lg border border-border mb-10">
             <div className="px-4 py-5 sm:px-6 flex justify-between items-center">

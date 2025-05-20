@@ -5,5 +5,9 @@ export default function WorkerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout role="null">{children}</AppLayout>;
+  return (
+    <AppLayout user={null} role="null">
+      {children}
+    </AppLayout>
+  );
 }
