@@ -68,7 +68,7 @@ export default function RegisterPage() {
             <p className="mt-2 text-center text-sm text-muted-foreground">
               Or{" "}
               <Link
-                href="/login"
+                href="/auth/login"
                 className="font-medium text-primary hover:text-primary/90"
               >
                 sign in to your existing account

@@ -4,16 +4,16 @@ import {
   ClockIcon,
   BellIcon,
   UserIcon,
-  MapPinIcon,
-  CircleIcon as InformationCircleIcon,
-  CalendarIcon,
   ChevronRightIcon,
 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/getCurrentUser";
-import { getUserReports } from "@/lib/getUserReport";
+import { getUserReports } from "@/lib/getReport";
 import PageHeader from "@/components/common/PageHeader";
+import ReportCard from "@/components/common/user/report/ReportCard";
 
 export const metadata = {
   title: "PuService - User Dashboard",
@@ -23,17 +23,21 @@ export const metadata = {
 interface UserReport {
   _id: string;
   title: string;
-  status: string;
+  description: string;
+  imageUrl?: string;
   address: string;
-  createdAt: string;
+  status: "pending" | "in-progress" | "resolved";
   categoryId?: {
     name?: string;
   };
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default async function UserPage() {
   const user = await getCurrentUser();
-  const recentReports = await getUserReports(user!.id, 3);
+  const recentReports = await getUserReports({ userId: user!.id, limit: 3 });
 
   return (
     <>
@@ -133,56 +137,18 @@ export default async function UserPage() {
               </Card>
             ) : (
               recentReports.map((report: UserReport) => (
-                <Card
-                  key={report._id}
-                  className="bg-background shadow-sm rounded-md border border-border hover:bg-muted-foreground/10 transition-colors py-4 mb-4"
-                >
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-primary truncate">
-                        {report.title}
-                      </p>
-                      <div className="ml-2 flex-shrink-0 flex">
-                        <span className="px-2 capitalize inline-flex text-xs leading-5 font-semibold rounded-full">
-                          {report.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="mt-2 sm:flex sm:justify-between">
-                      <div className="sm:flex">
-                        <p className="flex items-center text-sm text-muted-foreground">
-                          <MapPinIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                          {report.address}
-                        </p>
-                        <p className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0 sm:ml-6">
-                          <InformationCircleIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                          {report.categoryId?.name ?? "Uncategorized"}
-                        </p>
-                      </div>
-                      <div className="mt-2 flex items-center text-sm text-muted-foreground sm:mt-0">
-                        <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-muted-foreground" />
-                        <p>
-                          Submitted on{" "}
-                          <time>
-                            {new Date(report.createdAt).toLocaleDateString()}
-                          </time>
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ReportCard key={report._id} report={report} />
               ))
             )}
           </>
 
           {/* View All Reports Button */}
           <div className="text-center m-5">
-            <Link
-              href="/dashboard/user/report/history"
-              className="inline-flex items-center px-4 py-2 border border-input shadow-sm text-sm font-medium rounded-md text-foreground bg-card hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              View All Reports
-              <ChevronRightIcon className="ml-2 -mr-1 h-5 w-5 text-muted-foreground" />
+            <Link href="/user/reports/history">
+              <Button className="inline-flex items-center px-4 py-2 border border-input shadow-sm text-sm font-medium rounded-md text-foreground bg-card hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                View All Reports
+                <ChevronRightIcon className="ml-2 -mr-1 h-5 w-5 text-muted-foreground" />
+              </Button>
             </Link>
           </div>
         </div>

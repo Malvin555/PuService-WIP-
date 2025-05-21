@@ -15,44 +15,44 @@ export const metadata = {
 export default function LoginPage() {
   const router = useRouter();
 
-    const [form, setForm] = useState({ email: "", password: "" });
-    const [error, setError] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setForm((prev) => ({ ...prev, [name]: value }));
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setError("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
 
-      try {
-        const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-          credentials: "include", // required to set HTTP-only cookie
-        });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+        credentials: "include", // required to set HTTP-only cookie
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          setError(data.error || "Login failed");
-          return;
-        }
-
-        // Role-based redirection
-        const role = data.user?.role;
-        if (role === "admin") router.push("/admin");
-        else if (role === "worker") router.push("/worker");
-        else router.push("/user");
-      } catch (err) {
-        console.error("Login error:", err);
-        setError("Something went wrong. Please try again.");
+      if (!res.ok) {
+        setError(data.error || "Login failed");
+        return;
       }
-    };
-    return (
+
+      // Role-based redirection
+      const role = data.user?.role;
+      if (role === "admin") router.push("/admin");
+      else if (role === "worker") router.push("/worker");
+      else router.push("/user");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
+    }
+  };
+  return (
     <>
       <div className="min-h-screen bg-background">
         <div className="flex flex-col justify-center py-20 sm:px-6 lg:px-8">
@@ -63,7 +63,7 @@ export default function LoginPage() {
             <p className="mt-2 text-center text-sm text-muted-foreground">
               Or{" "}
               <Link
-                href="/register"
+                href="/auth/register"
                 className="font-medium text-primary hover:text-primary/90"
               >
                 create a new account

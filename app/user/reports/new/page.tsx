@@ -1,4 +1,4 @@
-import FormReport from "@/components/pages/user/report/FormReport";
+import FormReport from "@/components/common/user/report/ReportForm";
 import PageHeader from "@/components/common/PageHeader";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
@@ -24,7 +24,7 @@ export default async function NewReportPage() {
           />
 
           {/* Form Report */}
-          <FormReport userId= {user.id} />
+          <FormReport userId={user.id} />
         </section>
       </main>
     </>
