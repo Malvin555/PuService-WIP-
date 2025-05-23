@@ -46,6 +46,7 @@ Example:
 ```
 MONGODB_URI=your_database_connection_string
 JWT_SECRET=your_auth_secret
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 > ⚠️ Never commit sensitive variables to source control.
