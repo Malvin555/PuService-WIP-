@@ -1,22 +1,10 @@
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  FilterIcon,
-  SearchIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import PageHeader from "@/components/common/PageHeader";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import ReportCard from "@/components/common/user/report/ReportCard";
+import ReportFilter from "@/components/common/user/report/ReportFilter";
 
 interface ReportCard {
   _id: string;
@@ -34,25 +22,51 @@ interface ReportCard {
 }
 
 interface Props {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function ReportHistoryPage({ searchParams }: Props) {
-  const user = await getCurrentUser();
   const params = await searchParams;
 
-  if (!user)
+  const user = await getCurrentUser();
+
+  if (!user) {
     return (
       <p className="p-4 text-center text-red-600 font-semibold">
         You must be logged in.
       </p>
     );
+  }
 
-  const page = parseInt(params.page ?? "1", 10);
+  // Access params as object properties (string | string[] | undefined)
+  const page = parseInt(
+    Array.isArray(params.page) ? params.page[0] : (params.page ?? "1"),
+    10,
+  );
+  const status = Array.isArray(params.status)
+    ? params.status[0]
+    : params.status || "";
+  const category = Array.isArray(params.category)
+    ? params.category[0]
+    : params.category || "";
+  const search = Array.isArray(params.search)
+    ? params.search[0]
+    : params.search || "";
+
   const limit = 3;
 
+  const queryParams = new URLSearchParams({
+    userId: user.id,
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (status && status !== "all") queryParams.set("status", status);
+  if (category && category !== "all") queryParams.set("category", category);
+  if (search.trim()) queryParams.set("search", search.trim());
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/function/report?userId=${user.id}&page=${page}&limit=${limit}`,
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/function/report?${queryParams.toString()}`,
     { cache: "no-store" },
   );
 
@@ -78,67 +92,8 @@ export default async function ReportHistoryPage({ searchParams }: Props) {
         />
 
         {/* Filters */}
-        <Card className="bg-background shadow-md rounded-lg border border-border mb-6">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label
-                  htmlFor="status-filter"
-                  className="text-sm font-medium text-foreground mb-2 flex items-center gap-2"
-                >
-                  <FilterIcon className="text-muted-foreground" />
-                  Status
-                </label>
-                <Select>
-                  <SelectTrigger id="status-filter" className="w-full">
-                    <SelectValue placeholder="All Statuses" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="resolved">Resolved</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label
-                  htmlFor="type-filter"
-                  className="text-sm font-medium text-foreground mb-2 flex items-center gap-2"
-                >
-                  <FilterIcon className="text-muted-foreground" />
-                  Type
-                </label>
-                <Select>
-                  <SelectTrigger id="type-filter" className="w-full">
-                    <SelectValue placeholder="All Types" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="category-1">Category 1</SelectItem>
-                    <SelectItem value="category-2">Category 2</SelectItem>
-                    <SelectItem value="category-3">Category 3</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label
-                  htmlFor="search"
-                  className="text-sm font-medium text-foreground mb-2 flex items-center gap-2"
-                >
-                  <SearchIcon className="text-muted-foreground" />
-                  Search
-                </label>
-                <Input
-                  type="text"
-                  id="search"
-                  className="w-full"
-                  placeholder="Search reports..."
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
+        <ReportFilter />
 
         {reports.length === 0 ? (
           <Card className="bg-background shadow-sm rounded-md border border-border py-4">
@@ -159,7 +114,7 @@ export default async function ReportHistoryPage({ searchParams }: Props) {
         {/* Pagination */}
         <nav className="flex items-center justify-between border-t border-border mt-6 pt-4">
           <Link
-            href={`/user/reports/history?page=${page - 1}`}
+            href={`/user/reports/history?${queryParams.toString().replace(/page=\d+/, `page=${page - 1}`)}`}
             scroll={false}
             className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg ${
               page <= 1
@@ -179,7 +134,7 @@ export default async function ReportHistoryPage({ searchParams }: Props) {
               return (
                 <Link
                   key={i}
-                  href={`/user/reports/history?page=${pageNum}`}
+                  href={`/user/reports/history?${queryParams.toString().replace(/page=\d+/, `page=${pageNum}`)}`}
                   scroll={false}
                   className={`px-4 py-2 text-sm font-medium rounded-lg ${
                     page === pageNum
@@ -194,7 +149,7 @@ export default async function ReportHistoryPage({ searchParams }: Props) {
           </div>
 
           <Link
-            href={`/user/reports/history?page=${page + 1}`}
+            href={`/user/reports/history?${queryParams.toString().replace(/page=\d+/, `page=${page + 1}`)}`}
             scroll={false}
             className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg ${
               page >= totalPages

@@ -10,9 +10,21 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
+    const status = searchParams.get("status");
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
 
-    const filter: Partial<{ userId: string }> = {};
+    const filter: Record<string, unknown> = {};
     if (userId) filter.userId = userId;
+    if (status && status !== "all") filter.status = status;
+    if (category && category !== "all") filter.categoryId = category;
+
+    if (search && search.trim() !== "") {
+      filter.$or = [
+        { title: { $regex: search.trim(), $options: "i" } },
+        { description: { $regex: search.trim(), $options: "i" } },
+      ];
+    }
 
     const pageParam = searchParams.get("page");
     const limitParam = searchParams.get("limit");

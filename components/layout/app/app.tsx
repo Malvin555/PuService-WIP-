@@ -9,7 +9,7 @@ type User = {
 type AppLayoutProps = {
   children: ReactNode;
   role: "user" | "null";
-  user: User | null;
+  user?: User | null;
 };
 
 export default function AppLayout({ children, role, user }: AppLayoutProps) {

@@ -14,8 +14,8 @@ export default function NotificationsPage() {
             description="Stay updated on your reports and service announcements"
           />
 
-          <Card className="w-full shadow-md">
-            <CardHeader>
+          <Card className="w-full shadow-md gap-0">
+            <CardHeader className="py-4 border-b">
               <CardTitle>Recent Notifications</CardTitle>
             </CardHeader>
             <ul className="divide-y">

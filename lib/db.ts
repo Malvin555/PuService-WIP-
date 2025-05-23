@@ -4,8 +4,6 @@ import mongoose, { Connection } from "mongoose";
 let cachedConnection: Connection | null = null;
 
 export async function connectToMongoDB() {
-  console.log("Mongo URI:", process.env.MONGODB_URI);
-
   if (cachedConnection) {
     console.log("✅ Using cached DB connection");
     return cachedConnection;

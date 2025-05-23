@@ -1,4 +1,8 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
+import InfoReportModal from "@/components/modal/InfoReportModal";
+import { useState } from "react";
 import {
   MapPinIcon,
   CalendarIcon,
@@ -21,12 +25,13 @@ interface ReportCardProps {
 }
 
 export default function ReportCard({ report }: ReportCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <Card
       key={report._id}
       className="bg-background shadow-sm rounded-md border border-border hover:bg-muted-foreground/10 transition-colors py-4 mb-4"
     >
-      <CardContent>
+      <CardContent onClick={() => setIsModalOpen(true)}>
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium text-primary truncate">
             {report.title}
@@ -59,6 +64,10 @@ export default function ReportCard({ report }: ReportCardProps) {
           </div>
         </div>
       </CardContent>
+      <InfoReportModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Card>
   );
 }

@@ -11,7 +11,7 @@ const sections = ["home", "feature", "about"];
 
 interface NavbarProps {
   role: "user" | "null";
-  user: { name: string } | null;
+  user?: { name: string } | null;
 }
 
 export default function NavigationMenu({ role, user }: NavbarProps) {
