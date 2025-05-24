@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
       name: user.name,
       email: user.email,
       role: user.role,
+      phone: user.phone,
+      address: user.address,
     };
 
     const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: "1h" });

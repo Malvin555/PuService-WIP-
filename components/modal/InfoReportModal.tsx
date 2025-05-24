@@ -34,7 +34,7 @@ export default function InfoReportModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Report Details"
+      title={`Report #${report._id.slice(-4).toUpperCase()}`}
       footer={
         <div className="flex  justify-end gap-2">
           <Button

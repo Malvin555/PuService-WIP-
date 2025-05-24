@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
       name,
       email,
       password: hashedPassword,
-      phone,
-      address,
-      role: "user", // default role
+      phone: phone || "",
+      address: address || "",
+      role: "user",
     });
 
     await newUser.save();

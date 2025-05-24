@@ -2,13 +2,15 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/common/PageHeader";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export const metadata = {
   title: "PuService - User Profile",
   description: "Manage your account information and preferences",
 };
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const user = await getCurrentUser();
   return (
     <>
       <div className="pt-16">
@@ -30,7 +32,7 @@ export default function ProfilePage() {
               </div>
               <div className="flex-shrink-0">
                 <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xl font-medium">
-                  MA
+                  {user?.name?.slice(0, 2).toUpperCase() || "NA"}
                 </div>
               </div>
             </div>
@@ -49,7 +51,7 @@ export default function ProfilePage() {
                         type="text"
                         name="name"
                         id="name"
-                        defaultValue="Malvin"
+                        defaultValue={user!.name}
                       ></Input>
                     </div>
                   </div>
@@ -61,7 +63,7 @@ export default function ProfilePage() {
                         id="email"
                         name="email"
                         type="email"
-                        defaultValue="malvin@example.com"
+                        defaultValue={user!.email}
                       ></Input>
                     </div>
                   </div>
@@ -73,7 +75,7 @@ export default function ProfilePage() {
                         type="text"
                         name="phone_number"
                         id="phone"
-                        defaultValue="+44 18 9122 1895"
+                        defaultValue={user!.phone}
                       ></Input>
                     </div>
                   </div>
@@ -85,7 +87,7 @@ export default function ProfilePage() {
                         type="text"
                         name="address"
                         id="address"
-                        defaultValue="221B Baker Street, London"
+                        defaultValue={user!.address}
                       ></Input>
                     </div>
                   </div>
