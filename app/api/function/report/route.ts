@@ -89,6 +89,8 @@ export async function POST(req: Request) {
       address,
     } = body;
 
+    const response = "";
+
     if (!userId || !categoryId || !title || !description || !address) {
       return NextResponse.json(
         { message: "Missing required fields." },
@@ -111,6 +113,7 @@ export async function POST(req: Request) {
       imageUrl,
       address,
       status: "pending",
+      response,
     });
 
     return NextResponse.json(newReport, { status: 201 });
@@ -121,6 +124,51 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "Something went wrong.", error: errorMessage },
+      { status: 500 },
+    );
+  }
+}
+
+// Handle PATCH request - update report data
+export async function PATCH(req: Request) {
+  await connectToMongoDB();
+
+  try {
+    const body = await req.json();
+    const { reportId, response } = body;
+
+    if (!reportId || response === undefined || response === null) {
+      return NextResponse.json(
+        { message: "Missing reportId or response." },
+        { status: 400 },
+      );
+    }
+
+    if (!Types.ObjectId.isValid(reportId)) {
+      return NextResponse.json(
+        { message: "Invalid reportId." },
+        { status: 400 },
+      );
+    }
+
+    const updatedReport = await Report.findByIdAndUpdate(
+      reportId,
+      { response },
+      { new: true },
+    );
+
+    if (!updatedReport) {
+      return NextResponse.json(
+        { message: "Report not found." },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(updatedReport, { status: 200 });
+  } catch (error) {
+    console.error("Error updating report response:", error);
+    return NextResponse.json(
+      { message: "Something went wrong." },
       { status: 500 },
     );
   }

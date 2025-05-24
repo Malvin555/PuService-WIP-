@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import InfoReportModal from "@/components/modal/InfoReportModal";
 import { useState } from "react";
+import StatusBadge from "@/components/common/ReportStatus";
 import {
   MapPinIcon,
   CalendarIcon,
@@ -37,9 +38,7 @@ export default function ReportCard({ report }: ReportCardProps) {
             {report.title}
           </p>
           <div className="ml-2 flex-shrink-0 flex">
-            <span className="px-2 capitalize inline-flex text-xs leading-5 font-semibold rounded-full">
-              {report.status}
-            </span>
+            <StatusBadge status={report.status} />
           </div>
         </div>
         <div className="mt-2 sm:flex sm:justify-between">
@@ -67,6 +66,7 @@ export default function ReportCard({ report }: ReportCardProps) {
       <InfoReportModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        report={report}
       />
     </Card>
   );

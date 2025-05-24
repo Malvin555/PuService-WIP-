@@ -14,8 +14,12 @@ const ReportSchema = new Schema(
     address: { type: String, required: true },
     status: {
       type: String,
-      enum: ["pending", "process", "completed"],
+      enum: ["pending", "in-progress", "completed"],
       default: "pending",
+    },
+    response: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true },
