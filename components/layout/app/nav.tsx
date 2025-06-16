@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import ProfileDropdown from "@/components/common/ProfileDropdown";
+import { useLogout } from "@/components/hooks/useLogout";
 
 const sections = ["home", "feature", "about"];
 
@@ -15,6 +16,8 @@ interface NavbarProps {
 }
 
 export default function NavigationMenu({ role, user }: NavbarProps) {
+  const logout = useLogout();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const pathname = usePathname();
@@ -108,7 +111,9 @@ export default function NavigationMenu({ role, user }: NavbarProps) {
           </div>
           {/* Right side: login/register only if not user */}
           {isUser && user ? (
-            <ProfileDropdown user={user} />
+            <div className="hidden md:flex">
+              <ProfileDropdown user={user} />
+            </div>
           ) : (
             <div className="hidden sm:flex sm:items-center sm:space-x-2">
               <Link href="/auth/login">
@@ -134,35 +139,82 @@ export default function NavigationMenu({ role, user }: NavbarProps) {
 
       {mobileMenuOpen && (
         <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
-            {sections.map((id) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
-                  activeSection === id
-                    ? "border-primary text-primary bg-primary/10"
-                    : "border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary hover:border-primary/50"
-                }`}
-              >
-                {id.charAt(0).toUpperCase() + id.slice(1)}
-              </a>
-            ))}
-          </div>
-
-          <div className="pt-4 pb-3 border-t border-border">
-            <div className="flex items-center px-4 space-x-3">
-              <Link href="/auth/login">
-                <Button variant={"ghost"} className="hover:bg-transparent">
-                  Login
-                </Button>
-              </Link>
-
-              <Link href="/auth/register">
-                <Button className="px-4 py-2h">Register</Button>
-              </Link>
+          {!shouldHideNav && isUser ? (
+            // 👉 Mobile menu for USER
+            <div id="mobile-menu">
+              <div className="pt-2 pb-3 space-y-1">
+                <Link
+                  href="/user"
+                  className={`block pl-3 pr-4 py-2 border-l-4 ${
+                    isActive("/user")
+                      ? "border-primary text-primary bg-primary/10"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
+                  } text-base font-medium`}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/user/reports/history"
+                  className={`block pl-3 pr-4 py-2 border-l-4 ${
+                    isActive("/user/reports/history")
+                      ? "border-primary text-primary bg-primary/10"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
+                  } text-base font-medium`}
+                >
+                  History
+                </Link>
+              </div>
+              <div className="pt-4 pb-3 border-t border-border">
+                <div className="space-y-1">
+                  <Link
+                    href="/user/profile"
+                    className={`block pl-3 pr-4 py-2 border-l-4 ${
+                      isActive("/user/profile")
+                        ? "border-primary text-primary bg-primary/10"
+                        : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent hover:border-border"
+                    } text-base font-medium`}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="w-full text-left block px-4 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="pt-2 pb-3 space-y-1">
+              {sections.map((id) => (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition-colors ${
+                    activeSection === id
+                      ? "border-primary text-primary bg-primary/10"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary hover:border-primary/50"
+                  }`}
+                >
+                  {id.charAt(0).toUpperCase() + id.slice(1)}
+                </a>
+              ))}
+
+              <div className="pt-4 pb-3 border-t border-border">
+                <div className="flex items-center px-4 space-x-3">
+                  <Link href="/auth/login">
+                    <Button variant="ghost" className="hover:bg-transparent">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/auth/register">
+                    <Button className="px-4 py-2">Register</Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </nav>
