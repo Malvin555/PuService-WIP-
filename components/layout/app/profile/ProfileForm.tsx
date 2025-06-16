@@ -13,11 +13,7 @@ type User = {
   address?: string;
 };
 
-export default function UpdateProfileForm({
-  user,
-}: {
-  user: User;
-}): JSX.Element {
+export default function UpdateProfileForm({ user }: { user: User | null }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
