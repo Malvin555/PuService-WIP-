@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import InfoReportModal from "@/components/modal/InfoReportModal";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -11,9 +12,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import PageHeader from "@/components/common/PageHeader";
+import ReportCard from "@/components/common/user/report/ReportCard";
+import StatusBadge from "@/components/common/ReportStatus";
+
+interface ReportCard {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrl?: string;
+  address: string;
+  status: "pending" | "in_progress" | "resolved";
+  categoryId?: {
+    name?: string;
+  };
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 type Report = {
   _id: string;
@@ -22,9 +39,36 @@ type Report = {
   createdAt: string;
 };
 
-export default function WorkerDashboard() {
-  const [reports, setReports] = useState<Report[]>([]);
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
 
+const RECENT_USERS_LIMIT = 5;
+const RECENT_REPORTS_LIMIT = 4;
+const TABLE_HEADERS = ["ID", "Title", "Status", "Date", "Action"];
+
+const getInitials = (name: string) => {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+  return parts[0][0].toUpperCase() + parts[1][0].toUpperCase();
+};
+
+export default function WorkerDashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<ReportCard | null>(null);
+
+  const handleViewDetails = (report: ReportCard) => {
+    setSelectedReport(report);
+    setIsModalOpen(true);
+  };
+
+  const [reports, setReports] = useState<ReportCard[]>([]);
+  const [recentUsers, setRecentUsers] = useState<User[]>([]);
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -32,174 +76,164 @@ export default function WorkerDashboard() {
     resolved: 0,
   });
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const res = await fetch("/api/function/report");
-        const data = await res.json();
+  const fetchUsers = useCallback(async () => {
+    try {
+      const res = await fetch("/api/function/user");
+      const data = await res.json();
 
-        if (res.ok) {
-          setReports(data.reports || []);
-
-          const pending = data.reports.filter(
-            (r: Report) => r.status === "pending",
-          ).length;
-          const inProgress = data.reports.filter(
-            (r: Report) => r.status === "in_progress",
-          ).length;
-          const resolved = data.reports.filter(
-            (r: Report) => r.status === "resolved",
-          ).length;
-
-          setStats({
-            total: data.totalReports,
-            pending,
-            inProgress,
-            resolved,
-          });
-        } else {
-          console.error("Failed to fetch reports:", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching reports:", error);
+      if (res.ok) {
+        const sorted = [...data].sort(
+          (a: User, b: User) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        setRecentUsers(sorted.slice(0, RECENT_USERS_LIMIT));
+      } else {
+        console.error("Failed to fetch users:", data.message);
       }
-    };
-
-    fetchReports();
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   }, []);
+
+  const fetchReports = useCallback(async () => {
+    try {
+      const res = await fetch("/api/function/report");
+      const data = await res.json();
+
+      if (res.ok) {
+        const reports = data.reports || [];
+        setReports(reports);
+
+        const statusCounts = reports.reduce(
+          (
+            acc: { pending: number; inProgress: number; resolved: number },
+            report: Report,
+          ) => {
+            if (report.status === "pending") acc.pending++;
+            else if (report.status === "in_progress") acc.inProgress++;
+            else if (report.status === "resolved") acc.resolved++;
+            return acc;
+          },
+          { pending: 0, inProgress: 0, resolved: 0 },
+        );
+
+        setStats({
+          total: data.totalReports,
+          ...statusCounts,
+        });
+      } else {
+        console.error("Failed to fetch reports:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchReports();
+  }, [fetchUsers, fetchReports]);
+
+  const statCards = useMemo(
+    () => [
+      {
+        title: "Total Reports",
+        value: stats.total,
+        bgColor: "bg-primary",
+        textColor: "text-primary-foreground",
+        icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
+      },
+      {
+        title: "Pending",
+        value: stats.pending,
+        bgColor: "bg-yellow-200",
+        textColor: "text-yellow-700",
+        icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
+      },
+      {
+        title: "In Progress",
+        value: stats.inProgress,
+        bgColor: "bg-blue-200",
+        textColor: "text-blue-700",
+        icon: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",
+      },
+      {
+        title: "Resolved",
+        value: stats.resolved,
+        bgColor: "bg-green-200",
+        textColor: "text-green-700",
+        icon: "M5 13l4 4L19 7",
+      },
+    ],
+    [stats],
+  );
+
+  const recentReports = useMemo(
+    () => reports.slice(0, RECENT_REPORTS_LIMIT),
+    [reports],
+  );
+
+  const processedUsers = useMemo(
+    () =>
+      recentUsers.map((user) => ({
+        ...user,
+        initials: getInitials(user.name),
+        timestamp: new Date(user.createdAt).toLocaleString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          day: "numeric",
+          month: "short",
+        }),
+      })),
+    [recentUsers],
+  );
+
   return (
     <>
-      {/* Title */}
       <PageHeader
         title="Worker Dashboard"
         description="Welcome back ! Here an overview of your current reports and activities."
       />
 
-      {/* Stats Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {/* Total Reports */}
-        <Card className="shadow-sm hover:shadow-md transition-shadow duration-150 border">
-          <CardContent className="p-5 flex items-center">
-            <div className="flex-shrink-0 bg-primary rounded-full p-3 shadow-md">
-              <svg
-                className="h-6 w-6 text-primary-foreground"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+        {statCards.map((stat) => (
+          <Card
+            key={stat.title}
+            className="shadow-sm hover:shadow-md transition-shadow duration-150 border"
+          >
+            <CardContent className="p-5 flex items-center">
+              <div
+                className={`flex-shrink-0 ${stat.bgColor} rounded-full p-3 shadow-md`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-            </div>
-            <div className="ml-4 flex-1">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                Total Reports
+                <svg
+                  className={`h-6 w-6 ${stat.textColor}`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d={stat.icon}
+                  />
+                </svg>
               </div>
-              <div className="text-3xl font-bold text-foreground mt-1">
-                {stats.total}
+              <div className="ml-4 flex-1">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+                  {stat.title}
+                </div>
+                <div className="text-3xl font-bold text-foreground mt-1">
+                  {stat.value}
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Pending Reports */}
-        <Card className="shadow-sm hover:shadow-md transition-shadow duration-150 border">
-          <CardContent className="p-5 flex items-center">
-            <div className="flex-shrink-0 bg-yellow-200 rounded-full p-3 shadow-md">
-              <svg
-                className="h-6 w-6 text-yellow-700"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <div className="ml-4 flex-1">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                Pending
-              </div>
-              <div className="text-3xl font-bold text-foreground mt-1">
-                {stats.pending}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* In Progress Reports */}
-        <Card className="shadow-sm hover:shadow-md transition-shadow duration-150 border">
-          <CardContent className="p-5 flex items-center">
-            <div className="flex-shrink-0 bg-blue-200 rounded-full p-3 shadow-md">
-              <svg
-                className="h-6 w-6 text-blue-700"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </div>
-            <div className="ml-4 flex-1">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                In Progress
-              </div>
-              <div className="text-3xl font-bold text-foreground mt-1">
-                {stats.inProgress}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Resolved Reports */}
-        <Card className="shadow-sm hover:shadow-md transition-shadow duration-150 border">
-          <CardContent className="p-5 flex items-center">
-            <div className="flex-shrink-0 bg-green-200 rounded-full p-3 shadow-md">
-              <svg
-                className="h-6 w-6 text-green-700"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <div className="ml-4 flex-1">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
-                Resolved
-              </div>
-              <div className="text-3xl font-bold text-foreground mt-1">
-                {stats.resolved}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Reports */}
         <div className="lg:col-span-2">
           <Card className="shadow-sm min-h-[400px] gap-0 max-h-[400px] overflow-hidden">
             <CardHeader className="border-b bg-muted/20 py-4 w-full flex">
@@ -211,58 +245,53 @@ export default function WorkerDashboard() {
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-background">
-                    {["ID", "Title", "Status", "Date", "Action"].map(
-                      (header) => (
-                        <TableHead
-                          key={header}
-                          className="px-6 text-sm font-medium text-muted-foreground whitespace-nowrap"
-                        >
-                          {header}
-                        </TableHead>
-                      ),
-                    )}
+                    {TABLE_HEADERS.map((header) => (
+                      <TableHead
+                        key={header}
+                        className="px-6 text-sm font-medium text-muted-foreground whitespace-nowrap"
+                      >
+                        {header}
+                      </TableHead>
+                    ))}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {reports.slice(0, 4).map((report, index) => (
+                  {recentReports.map((report, index) => (
                     <TableRow
                       key={report._id}
                       className="hover:bg-muted/10 border-b"
                     >
-                      <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
+                      <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap truncate">
                         {"#" + String(index + 1).padStart(2, "0")}
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm font-medium text-foreground max-w-[250px] truncate">
                         <span title={report.title}>{report.title}</span>
                       </TableCell>
                       <TableCell className="px-6 py-4">
-                        <Badge
-                          className={`px-3 py-1 capitalize ${
-                            report.status === "resolved"
-                              ? "bg-green-200 text-green-700"
-                              : report.status === "in_progress"
-                                ? "bg-blue-200 text-blue-700"
-                                : "bg-yellow-200 text-yellow-700"
-                          }`}
-                        >
-                          {report.status.replace("_", " ")}
-                        </Badge>
+                        <StatusBadge status={report.status} />
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
                         {new Date(report.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm whitespace-nowrap">
-                        <a
-                          href={`/reports/${report._id}`}
+                        <button
+                          onClick={() => handleViewDetails(report)}
                           className="text-primary hover:underline font-medium"
                         >
                           View Details
-                        </a>
+                        </button>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
+              {selectedReport && (
+                <InfoReportModal
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                  report={selectedReport}
+                />
+              )}
             </CardContent>
             <div className="px-6 py-4 bg-muted/10 border-t flex justify-end">
               <Button
@@ -288,7 +317,6 @@ export default function WorkerDashboard() {
           </Card>
         </div>
 
-        {/* Activity Feeds */}
         <div className="lg:col-span-1">
           <Card className="h-full min-h-[400px] gap-0 max-h-[400px] shadow-sm">
             <CardHeader className="border-b bg-muted/20 py-4 w-full flex">
@@ -298,55 +326,29 @@ export default function WorkerDashboard() {
             </CardHeader>
             <CardContent className="p-0 overflow-y-auto scrollbar-hide">
               <ul className="divide-y divide-border">
-                {[
-                  {
-                    name: "John Doe",
-                    initials: "JD",
-                    message: "Submitted a new report:",
-                    action: "Network connectivity issue",
-                    timestamp: "2 minutes ago",
-                  },
-                  {
-                    name: "Alice Smith",
-                    initials: "AS",
-                    message: "Updated status to:",
-                    action: "In Progress",
-                    timestamp: "45 minutes ago",
-                  },
-                  {
-                    name: "Robert Brown",
-                    initials: "RB",
-                    message: "Created new ticket:",
-                    action: "Application access issues",
-                    timestamp: "2 hours ago",
-                  },
-                ].map((activity, index) => (
+                {processedUsers.map((user) => (
                   <li
-                    key={index}
+                    key={user._id}
                     className="p-5 hover:bg-muted/10 transition-colors"
                   >
                     <div className="flex">
                       <Avatar className="h-10 w-10">
-                        {/* Could use AvatarImage if available */}
                         <AvatarFallback className="bg-primary text-primary-foreground">
-                          {activity.initials}
+                          {user.initials}
                         </AvatarFallback>
                       </Avatar>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-foreground">
-                          {activity.name}
+                        <p className="text-sm capitalize font-medium text-foreground">
+                          {user.name}
                         </p>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {activity.message}
-                          <a
-                            href="#"
-                            className="font-medium text-primary ml-1 hover:underline"
-                          >
-                            {activity.action}
-                          </a>
+                          Signed up with
+                          <span className="font-medium text-primary ml-1">
+                            {user.email}
+                          </span>
                         </p>
                         <p className="text-xs text-muted-foreground/70 mt-2">
-                          {activity.timestamp}
+                          {user.timestamp}
                         </p>
                       </div>
                     </div>

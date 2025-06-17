@@ -14,7 +14,7 @@ interface InfoReportModalProps {
     description: string;
     imageUrl?: string;
     address: string;
-    status: "pending" | "in-progress" | "resolved";
+    status: "pending" | "in_progress" | "resolved";
     response?: string;
     categoryId?: { name?: string };
     userId: string;
@@ -90,14 +90,18 @@ export default function InfoReportModal({
               </p>
             </div>
             <Separator className="my-2" />
-            <div>
+            <div className="max-w-full overflow-auto break-words">
               <p className="text-xs font-medium text-muted-foreground">
                 Description
               </p>
-              <p id="modalDescription" className="mt-1 text-sm text-foreground">
+              <p
+                id="modalDescription"
+                className="mt-1 text-sm text-foreground whitespace-pre-line"
+              >
                 {report.description}
               </p>
             </div>
+
             <Separator className="my-2" />
             <div>
               <p className="text-xs font-medium text-muted-foreground">

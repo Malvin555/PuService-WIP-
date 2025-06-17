@@ -12,7 +12,7 @@ interface ReportCard {
   description: string;
   imageUrl?: string;
   address: string;
-  status: "pending" | "in-progress" | "resolved";
+  status: "pending" | "in_progress" | "resolved";
   categoryId?: {
     name?: string;
   };

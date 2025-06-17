@@ -1,16 +1,16 @@
 import { connectToMongoDB } from "@/lib/db";
 import Report from "@/models/Report";
 import "@/models/Category";
-import "@/models/User"; // Ensure User model is imported if not already
+import "@/models/User";
 
 interface GetReportsOptions {
   userId?: string;
   limit?: number;
-  includeUser?: boolean; // true for workers
+  includeUser?: boolean;
 }
 
 export async function getUserReports(options: GetReportsOptions = {}) {
-  const { userId, limit = 3, includeUser = false } = options;
+  const { userId, limit, includeUser = false } = options;
 
   await connectToMongoDB();
 
@@ -23,11 +23,11 @@ export async function getUserReports(options: GetReportsOptions = {}) {
   if (includeUser) {
     query = query.populate({
       path: "userId",
-      select: "_id name email", // limit fields shown for user
+      select: "_id name email",
     });
   }
 
-  if (limit) {
+  if (limit !== undefined) {
     query = query.limit(limit);
   }
 

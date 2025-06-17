@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToMongoDB } from "@/lib/db";
 import Report from "@/models/Report";
+import "@/models/Category";
 import { Types } from "mongoose";
 
 // Handle GET request - fetch all reports
