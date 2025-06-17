@@ -1,5 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 import { Separator } from "@/components/ui/separator";
 import {
   HomeIcon,
@@ -18,6 +20,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ user, role }: SidebarProps) {
+  const pathname = usePathname();
+
   if (!user?.name) return null;
   // Generate initials from name
   const initials = (() => {
@@ -57,9 +61,21 @@ export default function Sidebar({ user, role }: SidebarProps) {
           <li>
             <Link
               href={`/${role}`}
-              className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
+              className={clsx(
+                "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                pathname === `/${role}`
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
+              )}
             >
-              <HomeIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+              <HomeIcon
+                className={clsx(
+                  "h-5 w-5 transition-colors",
+                  pathname === `/${role}`
+                    ? "text-primary"
+                    : "text-muted-foreground group-hover:text-primary",
+                )}
+              />
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
           </li>
@@ -74,9 +90,21 @@ export default function Sidebar({ user, role }: SidebarProps) {
             <li>
               <Link
                 href={`/${role}/reports`}
-                className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
+                className={clsx(
+                  "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                  pathname === `/${role}/reports`
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
+                )}
               >
-                <ClipboardIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ClipboardIcon
+                  className={clsx(
+                    "h-5 w-5 transition-colors",
+                    pathname === `/${role}/reports`
+                      ? "text-primary"
+                      : "text-muted-foreground group-hover:text-primary",
+                  )}
+                />
                 <span className="hidden sm:inline">All Reports</span>
               </Link>
             </li>
@@ -86,27 +114,63 @@ export default function Sidebar({ user, role }: SidebarProps) {
                 <li>
                   <Link
                     href={`/${role}/reports/pending`}
-                    className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700 transition-colors group"
+                    className={clsx(
+                      "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                      pathname.startsWith(`/${role}/reports/pending`)
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "text-yellow-700 hover:bg-yellow-100 hover:text-yellow-700",
+                    )}
                   >
-                    <ClockIcon className="h-5 w-5 text-yellow-500 group-hover:text-yellow-700 transition-colors" />
+                    <ClockIcon
+                      className={clsx(
+                        "h-5 w-5 transition-colors",
+                        pathname.startsWith(`/${role}/reports/pending`)
+                          ? "text-yellow-700"
+                          : "text-yellow-500 group-hover:text-yellow-700",
+                      )}
+                    />
                     <span className="hidden sm:inline">Pending</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href={`/${role}/reports/in-progress`}
-                    className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-blue-700 hover:bg-blue-100 hover:text-blue-700 transition-colors group"
+                    className={clsx(
+                      "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                      pathname.startsWith(`/${role}/reports/in-progress`)
+                        ? "bg-blue-100 text-blue-700"
+                        : "text-blue-700 hover:bg-blue-100 hover:text-blue-700",
+                    )}
                   >
-                    <RefreshCcwIcon className="h-5 w-5 text-blue-500 group-hover:text-blue-700 transition-colors" />
+                    <RefreshCcwIcon
+                      className={clsx(
+                        "h-5 w-5 transition-colors",
+                        pathname.startsWith(`/${role}/reports/in-progress`)
+                          ? "text-blue-700"
+                          : "text-blue-500 group-hover:text-blue-700",
+                      )}
+                    />
                     <span className="hidden sm:inline">In Progress</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href={`/${role}/reports/resolved`}
-                    className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-green-700 hover:bg-green-100 hover:text-green-700 transition-colors group"
+                    className={clsx(
+                      "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                      pathname.startsWith(`/${role}/reports/resolved`)
+                        ? "bg-green-100 text-green-700"
+                        : "text-green-700 hover:bg-green-100 hover:text-green-700",
+                    )}
                   >
-                    <CheckIcon className="h-5 w-5 text-green-500 group-hover:text-green-700 transition-colors" />
+                    <CheckIcon
+                      className={clsx(
+                        "h-5 w-5 transition-colors",
+                        pathname.startsWith(`/${role}/reports/resolved`)
+                          ? "text-green-700"
+                          : "text-green-500 group-hover:text-green-700",
+                      )}
+                    />
                     <span className="hidden sm:inline">Resolved</span>
                   </Link>
                 </li>
@@ -124,18 +188,42 @@ export default function Sidebar({ user, role }: SidebarProps) {
             <li>
               <Link
                 href={`/${role}/users`}
-                className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
+                className={clsx(
+                  "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                  pathname.startsWith(`/${role}/users`)
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
+                )}
               >
-                <UsersIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <UsersIcon
+                  className={clsx(
+                    "h-5 w-5 transition-colors",
+                    pathname.startsWith(`/${role}/users`)
+                      ? "text-primary"
+                      : "text-muted-foreground group-hover:text-primary",
+                  )}
+                />
                 <span className="hidden sm:inline">User Management</span>
               </Link>
             </li>
             <li>
               <Link
                 href={`/${role}/notifications`}
-                className="flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors group"
+                className={clsx(
+                  "flex items-center gap-3 px-2 sm:px-3 py-2 rounded-lg font-medium text-base transition-colors group",
+                  pathname.startsWith(`/${role}/notifications`)
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
+                )}
               >
-                <BellIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <BellIcon
+                  className={clsx(
+                    "h-5 w-5 transition-colors",
+                    pathname.startsWith(`/${role}/notifications`)
+                      ? "text-primary"
+                      : "text-muted-foreground group-hover:text-primary",
+                  )}
+                />
                 <span className="hidden sm:inline">Manage Notifications</span>
               </Link>
             </li>

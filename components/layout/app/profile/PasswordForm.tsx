@@ -52,26 +52,30 @@ export default function UpdatePasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 mt-10 w-full mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full mx-auto">
       <div className="grid gap-4">
         <div>
           <Label htmlFor="new_password">New Password</Label>
-          <Input
-            id="new_password"
-            name="new_password"
-            type="password"
-            required
-          />
+          <div className="mt-2">
+            <Input
+              id="new_password"
+              name="new_password"
+              type="password"
+              required
+            />
+          </div>
         </div>
 
         <div>
           <Label htmlFor="confirm_password">Confirm Password</Label>
-          <Input
-            id="confirm_password"
-            name="confirm_password"
-            type="password"
-            required
-          />
+          <div className="mt-2">
+            <Input
+              id="confirm_password"
+              name="confirm_password"
+              type="password"
+              required
+            />
+          </div>
         </div>
       </div>
 

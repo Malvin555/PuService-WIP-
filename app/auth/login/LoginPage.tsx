@@ -32,7 +32,7 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
-        credentials: "include", // required to set HTTP-only cookie
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -81,7 +81,7 @@ export default function LoginPage() {
               >
                 <div>
                   <Label>Email Address</Label>
-                  <div className="mt-1">
+                  <div className="mt-2">
                     <Input
                       name="email"
                       type="email"
@@ -89,19 +89,19 @@ export default function LoginPage() {
                       onChange={handleChange}
                     />
                   </div>
-                  <div className="min-h-[20px] text-destructive"></div>
+                  <div className=" text-destructive"></div>
                 </div>
 
                 <div>
                   <Label>Password</Label>
-                  <div className="mt-1">
+                  <div className="mt-2">
                     <Input
                       name="password"
                       type="password"
                       onChange={handleChange}
                     ></Input>
                   </div>
-                  <div className="min-h-[20px] text-destructive"></div>
+                  <div className=" text-destructive"></div>
                 </div>
 
                 <div className="flex">

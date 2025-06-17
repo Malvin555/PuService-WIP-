@@ -86,7 +86,7 @@ export default function RegisterPage() {
               >
                 <div>
                   <Label>Full Name</Label>
-                  <div className="mt-1">
+                  <div className="mt-2">
                     <Input
                       name="name"
                       type="text"
@@ -94,12 +94,12 @@ export default function RegisterPage() {
                       onChange={handleChange}
                     ></Input>
                   </div>
-                  <div className="min-h-[20px] text-destructive"></div>
+                  <div className=" text-destructive"></div>
                 </div>
 
                 <div>
                   <Label>Email Address</Label>
-                  <div className="mt-1">
+                  <div className="mt-2">
                     <Input
                       name="email"
                       type="email"
@@ -107,31 +107,31 @@ export default function RegisterPage() {
                       onChange={handleChange}
                     ></Input>
                   </div>
-                  <div className="min-h-[20px] text-destructive"></div>
+                  <div className=" text-destructive"></div>
                 </div>
 
                 <div>
                   <Label>Password</Label>
-                  <div className="mt-1">
+                  <div className="mt-2">
                     <Input
                       name="password"
                       type="password"
                       onChange={handleChange}
                     ></Input>
                   </div>
-                  <div className="min-h-[20px] text-destructive"></div>
+                  <div className=" text-destructive"></div>
                 </div>
 
                 <div>
                   <Label>Confirm Password</Label>
-                  <div className="mt-1">
+                  <div className="mt-2">
                     <Input
                       name="confirmPassword"
                       type="password"
                       onChange={handleChange}
                     ></Input>
                   </div>
-                  <div className="min-h-[20px] text-destructive"></div>
+                  <div className=" text-destructive"></div>
                 </div>
 
                 <div className="flex items-start gap-x-2">

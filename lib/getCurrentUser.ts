@@ -5,6 +5,15 @@ import User from "@/models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+interface LeanUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  phone?: string;
+  address?: string;
+}
+
 export async function getCurrentUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -16,8 +25,9 @@ export async function getCurrentUser() {
 
     await connectToMongoDB();
 
-    // Use findById, NOT find, to get a single user document
-    const userDoc = await User.findById(decoded.id).select("-password").lean();
+    const userDoc = (await User.findById(decoded.id)
+      .select("-password")
+      .lean()) as LeanUser | null;
 
     if (!userDoc) return null;
 
@@ -26,8 +36,8 @@ export async function getCurrentUser() {
       name: userDoc.name,
       email: userDoc.email,
       role: userDoc.role,
-      phone: userDoc.phone || "",
-      address: userDoc.address || "",
+      phone: userDoc.phone ?? "",
+      address: userDoc.address ?? "",
     };
   } catch (error) {
     console.error("Invalid token", error);

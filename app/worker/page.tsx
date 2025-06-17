@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +15,58 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import PageHeader from "@/components/common/PageHeader";
 
+type Report = {
+  _id: string;
+  title: string;
+  status: "pending" | "in_progress" | "resolved";
+  createdAt: string;
+};
+
 export default function WorkerDashboard() {
+  const [reports, setReports] = useState<Report[]>([]);
+
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    inProgress: 0,
+    resolved: 0,
+  });
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await fetch("/api/function/report");
+        const data = await res.json();
+
+        if (res.ok) {
+          setReports(data.reports || []);
+
+          const pending = data.reports.filter(
+            (r: Report) => r.status === "pending",
+          ).length;
+          const inProgress = data.reports.filter(
+            (r: Report) => r.status === "in_progress",
+          ).length;
+          const resolved = data.reports.filter(
+            (r: Report) => r.status === "resolved",
+          ).length;
+
+          setStats({
+            total: data.totalReports,
+            pending,
+            inProgress,
+            resolved,
+          });
+        } else {
+          console.error("Failed to fetch reports:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+      }
+    };
+
+    fetchReports();
+  }, []);
   return (
     <>
       {/* Title */}
@@ -46,7 +100,9 @@ export default function WorkerDashboard() {
               <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
                 Total Reports
               </div>
-              <div className="text-3xl font-bold text-foreground mt-1">100</div>
+              <div className="text-3xl font-bold text-foreground mt-1">
+                {stats.total}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -74,7 +130,9 @@ export default function WorkerDashboard() {
               <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
                 Pending
               </div>
-              <div className="text-3xl font-bold text-foreground mt-1">29</div>
+              <div className="text-3xl font-bold text-foreground mt-1">
+                {stats.pending}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -102,7 +160,9 @@ export default function WorkerDashboard() {
               <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
                 In Progress
               </div>
-              <div className="text-3xl font-bold text-foreground mt-1">90</div>
+              <div className="text-3xl font-bold text-foreground mt-1">
+                {stats.inProgress}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -130,7 +190,9 @@ export default function WorkerDashboard() {
               <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold">
                 Resolved
               </div>
-              <div className="text-3xl font-bold text-foreground mt-1">80</div>
+              <div className="text-3xl font-bold text-foreground mt-1">
+                {stats.resolved}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -162,57 +224,36 @@ export default function WorkerDashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {[
-                    {
-                      id: "#01",
-                      title: "Network connectivity issue",
-                      status: { text: "Resolved" },
-                      date: "2024-01-05",
-                      statusColor: "bg-green-200 text-green-700",
-                    },
-                    {
-                      id: "#02",
-                      title: "Database performance degradation",
-                      status: { text: "In Progress" },
-                      date: "2024-01-10",
-                      statusColor: "bg-blue-200 text-blue-700",
-                    },
-                    {
-                      id: "#03",
-                      title: "Server patch required",
-                      status: { text: "Pending" },
-                      date: "2024-01-15",
-                      statusColor: "bg-yellow-200 text-yellow-700",
-                    },
-                    {
-                      id: "#04",
-                      title: "Application access issues",
-                      status: { text: "Pending" },
-                      date: "2024-01-18",
-                      statusColor: "bg-yellow-200 text-yellow-700",
-                    },
-                  ].map((report) => (
+                  {reports.slice(0, 4).map((report, index) => (
                     <TableRow
-                      key={report.id}
+                      key={report._id}
                       className="hover:bg-muted/10 border-b"
                     >
                       <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
-                        {report.id}
+                        {"#" + String(index + 1).padStart(2, "0")}
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm font-medium text-foreground max-w-[250px] truncate">
                         <span title={report.title}>{report.title}</span>
                       </TableCell>
                       <TableCell className="px-6 py-4">
-                        <Badge className={`${report.statusColor} px-3 py-1`}>
-                          {report.status.text}
+                        <Badge
+                          className={`px-3 py-1 capitalize ${
+                            report.status === "resolved"
+                              ? "bg-green-200 text-green-700"
+                              : report.status === "in_progress"
+                                ? "bg-blue-200 text-blue-700"
+                                : "bg-yellow-200 text-yellow-700"
+                          }`}
+                        >
+                          {report.status.replace("_", " ")}
                         </Badge>
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
-                        {report.date}
+                        {new Date(report.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="px-6 py-4 text-sm whitespace-nowrap">
                         <a
-                          href="#"
+                          href={`/reports/${report._id}`}
                           className="text-primary hover:underline font-medium"
                         >
                           View Details

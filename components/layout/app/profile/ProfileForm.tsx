@@ -46,30 +46,38 @@ export default function UpdateProfileForm({ user }: { user: User | null }) {
       <div className="grid gap-4">
         <div>
           <Label htmlFor="name">Username</Label>
-          <Input id="name" name="name" defaultValue={user?.name ?? ""} />
+          <div className="mt-2">
+            <Input id="name" name="name" defaultValue={user?.name ?? ""} />
+          </div>
         </div>
 
         <div>
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" defaultValue={user?.email ?? ""} />
+          <div className="mt-2">
+            <Input id="email" name="email" defaultValue={user?.email ?? ""} />
+          </div>
         </div>
 
         <div>
           <Label htmlFor="phone">Phone Number</Label>
-          <Input
-            id="phone"
-            name="phone_number"
-            defaultValue={user?.phone ?? ""}
-          />
+          <div className="mt-2">
+            <Input
+              id="phone"
+              name="phone_number"
+              defaultValue={user?.phone ?? ""}
+            />
+          </div>
         </div>
 
         <div>
           <Label htmlFor="address">Address</Label>
-          <Input
-            id="address"
-            name="address"
-            defaultValue={user?.address ?? ""}
-          />
+          <div className="mt-2">
+            <Input
+              id="address"
+              name="address"
+              defaultValue={user?.address ?? ""}
+            />
+          </div>
         </div>
       </div>
 
