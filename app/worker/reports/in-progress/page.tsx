@@ -5,10 +5,16 @@ import ReportClientSection from "@/components/common/dashboard/ReportInitials";
 type Status = "pending" | "in_progress" | "resolved";
 
 type ReportDisplay = {
-  id: string | number;
+  _id: string;
+  id: string;
   title: string;
-  category: string;
+  description: string;
+  address: string;
   status: Status;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  userId: string;
   user: string;
   date: string;
 };
@@ -21,6 +27,7 @@ type ReportFromAPI = {
   address?: string;
   status: Status;
   createdAt: string;
+  updatedAt: string;
   userId: {
     _id: string;
     name: string;
@@ -40,12 +47,18 @@ export default async function ReportsPageWorker() {
       const rawStatus = r.status?.toLowerCase().replace("-", "_") as Status;
 
       return {
+        _id: r._id,
         id: `#${String(index + 1).padStart(2, "0")}`,
         title: r.title,
+        description: r.description,
+        address: r.address ?? "-",
         category: r.categoryId?.name ?? "Uncategorized",
         status: rawStatus,
         user: r.userId?.name ?? "Unknown",
         date: new Date(r.createdAt).toISOString().split("T")[0],
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+        userId: r.userId._id,
       };
     })
     .filter((r: ReportDisplay) => r.status === "in_progress");
@@ -53,8 +66,9 @@ export default async function ReportsPageWorker() {
   return (
     <>
       <PageHeader
-        title="Manage All Reports"
-        description="View and manage all reports in one place."
+        title="In Progress Reports"
+        titleClassName="text-blue-800"
+        description="View and manage in progress reports."
         withSearch
       />
       <ReportClientSection reports={transformed} />

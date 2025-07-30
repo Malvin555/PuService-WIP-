@@ -1,9 +1,23 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import PageHeader from "@/components/common/PageHeader";
-import ReportCard from "@/components/common/dashboard/report/ReportCard";
-import ReportTable from "@/components/common/dashboard/report/ReportTable";
+import { getUserReports } from "@/lib/getReport";
+import ReportClientSection from "@/components/common/dashboard/ReportInitials";
+
+type Status = "pending" | "in_progress" | "resolved";
+
+type ReportDisplay = {
+  _id: string;
+  id: string;
+  title: string;
+  description: string;
+  address: string;
+  status: Status;
+  createdAt: string;
+  updatedAt: string;
+  category: string;
+  userId: string;
+  user: string;
+  date: string;
+};
 
 type ReportFromAPI = {
   _id: string;
@@ -11,8 +25,9 @@ type ReportFromAPI = {
   description: string;
   imageUrl?: string;
   address?: string;
-  status: string;
+  status: Status;
   createdAt: string;
+  updatedAt: string;
   userId: {
     _id: string;
     name: string;
@@ -24,56 +39,29 @@ type ReportFromAPI = {
   };
 };
 
-type Status = "pending" | "in_progress" | "resolved";
+export default async function ReportsPageWorker() {
+  const data = await getUserReports({ includeUser: true });
 
-type ReportDisplay = {
-  id: string | number;
-  title: string;
-  category: string;
-  status: Status;
-  user: string;
-  date: string;
-};
+  const transformed: ReportDisplay[] = (data || []).map(
+    (r: ReportFromAPI, index: number) => {
+      const rawStatus = r.status?.toLowerCase().replace("-", "_") as Status;
 
-export default function ReportsPageWorker() {
-  const [reports, setReports] = useState<ReportDisplay[]>([]);
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const res = await fetch("/api/function/report");
-        const data = await res.json();
-
-        if (!res.ok) {
-          console.error("API Error:", data.message);
-          return;
-        }
-
-        const transformed = (data.reports as ReportFromAPI[]).map(
-          (r, index) => {
-            const rawStatus = r.status
-              .toLowerCase()
-              .replace("-", "_") as Status;
-
-            return {
-              id: `#${String(index + 1).padStart(2, "0")}`,
-              title: r.title,
-              category: r.categoryId?.name || "Uncategorized",
-              status: rawStatus,
-              user: r.userId?.name || "Unknown",
-              date: new Date(r.createdAt).toISOString().split("T")[0],
-            };
-          },
-        );
-
-        setReports(transformed);
-      } catch (err) {
-        console.error("Error fetching reports:", err);
-      }
-    };
-
-    fetchReports();
-  }, []);
+      return {
+        _id: r._id,
+        id: `#${String(index + 1).padStart(2, "0")}`,
+        title: r.title,
+        description: r.description,
+        address: r.address ?? "-",
+        category: r.categoryId?.name ?? "Uncategorized",
+        status: rawStatus,
+        user: r.userId?.name ?? "Unknown",
+        date: new Date(r.createdAt).toISOString().split("T")[0],
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+        userId: r.userId._id,
+      };
+    },
+  );
 
   return (
     <>
@@ -82,20 +70,7 @@ export default function ReportsPageWorker() {
         description="View and manage all reports in one place."
         withSearch
       />
-
-      <div>
-        <ReportCard
-          reports={reports}
-          onView={(report) => console.log("View", report)}
-          onRespond={(report) => console.log("Respond", report)}
-        />
-
-        <ReportTable
-          reports={reports}
-          onView={(report) => console.log("View", report)}
-          onRespond={(report) => console.log("Respond", report)}
-        />
-      </div>
+      <ReportClientSection reports={transformed} />
     </>
   );
 }

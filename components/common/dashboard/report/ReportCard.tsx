@@ -10,12 +10,18 @@ import StatusBadge from "@/components/common/ReportStatus";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Report = {
-  id: number | string;
+  _id: string;
+  id: string;
   title: string;
+  description: string;
+  address: string;
+  status: "pending" | "in_progress" | "resolved";
+  createdAt: string;
+  updatedAt: string;
   category: string;
+  userId: string;
   user: string;
   date: string;
-  status: "pending" | "in_progress" | "resolved";
 };
 
 interface MobileReportCardListProps {

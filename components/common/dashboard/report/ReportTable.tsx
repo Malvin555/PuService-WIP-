@@ -12,18 +12,21 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/common/ReportStatus";
-
-import { Skeleton } from "@/components/ui/skeleton";
-
-type Status = "pending" | "in_progress" | "resolved";
+import InfoReportModal from "@/components/modal/InfoReportModal";
 
 type Report = {
-  id: string | number;
+  _id: string;
+  id: string;
   title: string;
+  description: string;
+  address: string;
+  status: "pending" | "in_progress" | "resolved";
+  createdAt: string;
+  updatedAt: string;
   category: string;
+  userId: string;
   user: string;
   date: string;
-  status: Status;
 };
 
 interface ReportTableCardProps {
@@ -37,6 +40,14 @@ export default function ReportTable({
   reports,
   isLoading,
 }: ReportTableCardProps) {
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  function handleViewDetails(report: Report) {
+    setSelectedReport(report);
+    setIsModalOpen(true);
+  }
+
   const [currentPage, setCurrentPage] = useState(1);
   const reportsPerPage = 5;
 
@@ -81,17 +92,7 @@ export default function ReportTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? (
-                [...Array(5)].map((_, index) => (
-                  <TableRow key={index} className="animate-pulse border-b">
-                    {Array.from({ length: 7 }).map((_, i) => (
-                      <TableCell key={i} className="px-6 py-4">
-                        <Skeleton className="h-4 w-full rounded" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : currentReports.length === 0 ? (
+              {currentReports.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={7}
@@ -101,14 +102,15 @@ export default function ReportTable({
                   </TableCell>
                 </TableRow>
               ) : (
-                currentReports.map((report) => (
+                currentReports.map((report, index) => (
                   <TableRow
                     key={report.id}
                     className="hover:bg-muted/10 border-b"
                   >
                     <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
-                      {report.id}
+                      {"#" + String(startIndex + index + 1).padStart(2, "0")}
                     </TableCell>
+
                     <TableCell className="px-6 py-4 text-sm font-medium text-foreground max-w-[250px] truncate">
                       <span title={report.title}>{report.title}</span>
                     </TableCell>
@@ -128,6 +130,7 @@ export default function ReportTable({
                       <div className="flex space-x-2">
                         <Button
                           variant="link"
+                          onClick={() => handleViewDetails(report)}
                           size="sm"
                           className="text-blue-700 p-0 h-auto"
                         >
@@ -147,6 +150,13 @@ export default function ReportTable({
               )}
             </TableBody>
           </Table>
+          {selectedReport && (
+            <InfoReportModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              report={selectedReport}
+            />
+          )}
         </CardContent>
 
         {/* Pagination */}

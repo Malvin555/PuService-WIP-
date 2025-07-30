@@ -3,13 +3,17 @@
 import ReportCard from "@/components/common/dashboard/report/ReportCard";
 import ReportTable from "@/components/common/dashboard/report/ReportTable";
 
-type Status = "pending" | "in_progress" | "resolved";
-
 type ReportDisplay = {
-  id: string | number;
+  _id: string;
+  id: string;
   title: string;
+  description: string;
+  address: string;
+  status: "pending" | "in_progress" | "resolved";
+  createdAt: string;
+  updatedAt: string;
   category: string;
-  status: Status;
+  userId: string;
   user: string;
   date: string;
 };
