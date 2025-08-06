@@ -4,23 +4,12 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/common/ReportStatus";
+import { Report } from "@/types/report";
 
 interface InfoReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  report: {
-    _id: string;
-    title: string;
-    description: string;
-    imageUrl?: string;
-    address: string;
-    status: "pending" | "in_progress" | "resolved";
-    response?: string;
-    categoryId?: { name?: string };
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
-  } | null;
+  report: Report | null;
 }
 
 export default function InfoReportModal({
@@ -77,7 +66,7 @@ export default function InfoReportModal({
                 Category
               </p>
               <p id="modalCategory" className="mt-1 text-sm text-foreground">
-                {report.categoryId?.name || "Uncategorized"}
+                {report.category || "Uncategorized"}
               </p>
             </div>
             <Separator className="my-2" />

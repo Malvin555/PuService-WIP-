@@ -1,23 +1,8 @@
 import PageHeader from "@/components/common/PageHeader";
 import { getUserReports } from "@/lib/getReport";
 import ReportClientSection from "@/components/common/dashboard/ReportInitials";
-
+import { Report } from "@/types/report";
 type Status = "pending" | "in_progress" | "resolved";
-
-type ReportDisplay = {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  status: Status;
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  userId: string;
-  user: string;
-  date: string;
-};
 
 type ReportFromAPI = {
   _id: string;
@@ -42,7 +27,7 @@ type ReportFromAPI = {
 export default async function ReportsPageWorker() {
   const data = await getUserReports({ includeUser: true });
 
-  const transformed: ReportDisplay[] = (data || []).map(
+  const transformed: Report[] = (data || []).map(
     (r: ReportFromAPI, index: number) => {
       const rawStatus = r.status?.toLowerCase().replace("-", "_") as Status;
 

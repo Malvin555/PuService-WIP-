@@ -65,7 +65,6 @@ export default function UserPageWorker() {
       <PageHeader
         title="Manage Users"
         description="Browse the list of users, and manage access permissions"
-        withSearch
       />
 
       {/* Users Card */}

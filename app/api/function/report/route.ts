@@ -4,12 +4,31 @@ import Report from "@/models/Report";
 import "@/models/Category";
 import { Types } from "mongoose";
 
-// Handle GET request - fetch all reports
+// Handle GET request - fetch all reports or single report by ID
 export async function GET(req: Request) {
   await connectToMongoDB();
 
   try {
     const { searchParams } = new URL(req.url);
+    const reportId = searchParams.get("id");
+
+    // ✅ Fetch a single report by ID (for view modal)
+    if (reportId) {
+      const report = await Report.findById(reportId)
+        .populate("userId", "_id name email")
+        .populate("categoryId");
+
+      if (!report) {
+        return NextResponse.json(
+          { message: "Report not found" },
+          { status: 404 },
+        );
+      }
+
+      return NextResponse.json(report, { status: 200 });
+    }
+
+    // ✅ Otherwise, fetch all reports with optional filters
     const userId = searchParams.get("userId");
     const status = searchParams.get("status");
     const category = searchParams.get("category");
@@ -54,6 +73,7 @@ export async function GET(req: Request) {
         .populate("userId", "_id name email")
         .populate("categoryId")
         .sort({ createdAt: -1 });
+
       totalReports = reports.length;
     }
 
@@ -136,7 +156,7 @@ export async function PATCH(req: Request) {
 
   try {
     const body = await req.json();
-    const { reportId, response } = body;
+    const { reportId, response, status } = body;
 
     if (!reportId || response === undefined || response === null) {
       return NextResponse.json(
@@ -154,7 +174,10 @@ export async function PATCH(req: Request) {
 
     const updatedReport = await Report.findByIdAndUpdate(
       reportId,
-      { response },
+      {
+        ...(response !== undefined && { response }),
+        ...(status !== undefined && { status }),
+      },
       { new: true },
     );
 

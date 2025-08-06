@@ -5,65 +5,50 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/common/ReportStatus";
-import { Skeleton } from "@/components/ui/skeleton";
-
-type Report = {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  status: "pending" | "in_progress" | "resolved";
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  userId: string;
-  user: string;
-  date: string;
-};
+import RespondReportModal from "@/components/modal/RespondReportModal";
+import InfoReportModal from "@/components/modal/InfoReportModal";
+import { Report } from "@/types/report";
 
 interface MobileReportCardListProps {
   reports: Report[];
   onView?: (report: Report) => void;
   onRespond?: (report: Report) => void;
-  isLoading?: boolean;
 }
 
-export default function ReportCard({
-  reports,
-  onView,
-  onRespond,
-  isLoading,
-}: MobileReportCardListProps) {
-  if (isLoading) {
-    return (
-      <div className="md:hidden space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i} className="overflow-hidden gap-0 border">
-            <CardHeader className="py-4 border-b">
-              <div className="flex justify-between items-start">
-                <div className="w-full space-y-2">
-                  <Skeleton className="h-5 w-3/4 rounded" />
-                  <Skeleton className="h-4 w-1/2 rounded" />
-                </div>
-                <Skeleton className="h-6 w-16 rounded-full" />
-              </div>
-            </CardHeader>
-            <CardContent className="py-3 bg-secondary">
-              <div className="flex justify-between items-center">
-                <Skeleton className="h-4 w-1/3" />
-                <div className="flex space-x-2">
-                  <Skeleton className="h-4 w-12" />
-                  <Skeleton className="h-4 w-16" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
+export default function ReportCard({ reports }: MobileReportCardListProps) {
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRespondModalOpen, setIsRespondModalOpen] = useState(false);
+  const [respondReport, setRespondReport] = useState<Report | null>(null);
+
+  const handleViewDetails = async (report: Report) => {
+    try {
+      const res = await fetch(`/api/function/report?id=${report._id}`);
+      const fresh = await res.json();
+
+      setSelectedReport(fresh);
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error("Failed to fetch report:", err);
+    }
+  };
+
+  function handleRespond(report: Report) {
+    setRespondReport(report);
+    setIsRespondModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false);
+    setSelectedReport(null);
+  }
+
+  function handleCloseRespondModal() {
+    setIsRespondModalOpen(false);
+    setRespondReport(null);
   }
 
   return (
@@ -95,7 +80,7 @@ export default function ReportCard({
                   variant="link"
                   size="sm"
                   className="text-blue-700 p-0 h-auto"
-                  onClick={() => onView?.(report)}
+                  onClick={() => handleViewDetails(report)}
                 >
                   View
                 </Button>
@@ -103,7 +88,7 @@ export default function ReportCard({
                   variant="link"
                   size="sm"
                   className="text-primary p-0 h-auto"
-                  onClick={() => onRespond?.(report)}
+                  onClick={() => handleRespond(report)}
                 >
                   Respond
                 </Button>
@@ -112,6 +97,22 @@ export default function ReportCard({
           </CardContent>
         </Card>
       ))}
+
+      {selectedReport && (
+        <InfoReportModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          report={selectedReport}
+        />
+      )}
+
+      {respondReport && (
+        <RespondReportModal
+          isOpen={isRespondModalOpen}
+          onCloseAction={handleCloseRespondModal}
+          reportId={respondReport._id}
+        />
+      )}
     </div>
   );
 }

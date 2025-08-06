@@ -2,32 +2,18 @@
 
 import ReportCard from "@/components/common/dashboard/report/ReportCard";
 import ReportTable from "@/components/common/dashboard/report/ReportTable";
-
-type ReportDisplay = {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  status: "pending" | "in_progress" | "resolved";
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  userId: string;
-  user: string;
-  date: string;
-};
+import { Report } from "@/types/report";
 
 export default function ReportClientSection({
   reports,
 }: {
-  reports: ReportDisplay[];
+  reports: Report[];
 }) {
-  const handleView = (report: ReportDisplay) => {
+  const handleView = (report: Report) => {
     console.log("View", report);
   };
 
-  const handleRespond = (report: ReportDisplay) => {
+  const handleRespond = (report: Report) => {
     console.log("Respond", report);
   };
 

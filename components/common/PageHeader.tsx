@@ -62,8 +62,14 @@ export default function PageHeader({
               <Input
                 type="text"
                 name={searchName}
-                value={searchValue}
-                onChange={onSearchChange}
+                {...(onSearchChange
+                  ? {
+                      value: searchValue ?? "",
+                      onChange: onSearchChange,
+                    }
+                  : {
+                      defaultValue: searchValue ?? "",
+                    })}
                 className="pl-10 pr-3 py-2 w-full md:w-[260px]"
                 placeholder={searchPlaceholder}
                 autoComplete="off"

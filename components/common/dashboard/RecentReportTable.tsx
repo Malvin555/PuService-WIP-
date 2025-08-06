@@ -4,21 +4,7 @@ import StatusBadge from "@/components/common/ReportStatus";
 import InfoReportModal from "@/components/modal/InfoReportModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
-
-type ReportType = {
-  _id: string;
-  title: string;
-  description: string;
-  address: string;
-  status: "pending" | "in_progress" | "resolved";
-  createdAt: string;
-  updatedAt: string;
-  categoryId?: {
-    _id: string;
-    name: string;
-  };
-  userId: string;
-};
+import type { Report } from "@/types/report";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,14 +19,14 @@ import {
 const TABLE_HEADERS = ["ID", "Title", "Status", "Date", "Action"];
 
 type RecentReportTableProps = {
-  reports: ReportType[];
+  reports: Report[];
 };
 
 export default function RecentReportTable({ reports }: RecentReportTableProps) {
-  const [selectedReport, setSelectedReport] = useState<ReportType | null>(null);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  function handleViewDetails(report: ReportType) {
+  function handleViewDetails(report: Report) {
     setSelectedReport(report);
     setIsModalOpen(true);
   }

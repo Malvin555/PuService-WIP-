@@ -12,22 +12,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/common/ReportStatus";
+import RespondReportModal from "@/components/modal/RespondReportModal";
 import InfoReportModal from "@/components/modal/InfoReportModal";
-
-type Report = {
-  _id: string;
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  status: "pending" | "in_progress" | "resolved";
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  userId: string;
-  user: string;
-  date: string;
-};
+import { Report } from "@/types/report";
 
 interface ReportTableCardProps {
   reports: Report[];
@@ -42,10 +29,23 @@ export default function ReportTable({
 }: ReportTableCardProps) {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRespondModalOpen, setIsRespondModalOpen] = useState(false);
+  const [respondReport, setRespondReport] = useState<Report | null>(null);
+  const handleViewDetails = async (report: Report) => {
+    try {
+      const res = await fetch(`/api/function/report?id=${report._id}`);
+      const fresh = await res.json();
 
-  function handleViewDetails(report: Report) {
-    setSelectedReport(report);
-    setIsModalOpen(true);
+      setSelectedReport(fresh); // ← updated report with latest data
+      setIsModalOpen(true);
+    } catch (err) {
+      console.error("Failed to fetch report:", err);
+    }
+  };
+
+  function handleRespond(report: Report) {
+    setRespondReport(report);
+    setIsRespondModalOpen(true);
   }
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +67,7 @@ export default function ReportTable({
         <CardContent
           className={`px-0 ${reports.length > 5 ? "overflow-auto scrollbar-hide" : ""}`}
           style={{
-            maxHeight: reports.length > 5 ? "calc(5 * 52px)" : "auto",
+            maxHeight: reports.length > 5 ? "calc(5 * 65px)" : "auto",
           }}
         >
           <Table className="min-w-full">
@@ -140,6 +140,7 @@ export default function ReportTable({
                           variant="link"
                           size="sm"
                           className="text-primary p-0 h-auto"
+                          onClick={() => handleRespond(report)}
                         >
                           Respond
                         </Button>
@@ -155,6 +156,14 @@ export default function ReportTable({
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}
               report={selectedReport}
+            />
+          )}
+
+          {respondReport && (
+            <RespondReportModal
+              isOpen={isRespondModalOpen}
+              onCloseAction={() => setIsRespondModalOpen(false)}
+              reportId={respondReport._id}
             />
           )}
         </CardContent>

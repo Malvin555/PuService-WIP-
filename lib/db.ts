@@ -5,7 +5,6 @@ let cachedConnection: Connection | null = null;
 
 export async function connectToMongoDB() {
   if (cachedConnection) {
-    console.log("✅ Using cached DB connection");
     return cachedConnection;
   }
 
@@ -17,10 +16,8 @@ export async function connectToMongoDB() {
 
     const mongooseConnection = await mongoose.connect(uri);
     cachedConnection = mongooseConnection.connection;
-    console.log("✅ New MongoDB connection established");
     return cachedConnection;
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
     throw error;
   }
 }
