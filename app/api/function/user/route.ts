@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToMongoDB } from "@/lib/db";
 import User from "@/models/User";
+import Report from "@/models/Report";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import bcrypt from "bcrypt";
 
@@ -18,9 +19,15 @@ export async function GET() {
   try {
     const users = await User.find({}).lean();
 
-    const sanitizedUsers = users.map(sanitizeUser);
+    // Add reportsCount for each user
+    const usersWithReports = await Promise.all(
+      users.map(async (user) => {
+        const reportsCount = await Report.countDocuments({ userId: user._id });
+        return { ...sanitizeUser(user), reportsCount };
+      }),
+    );
 
-    return NextResponse.json(sanitizedUsers, { status: 200 });
+    return NextResponse.json(usersWithReports, { status: 200 });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.json(
@@ -147,6 +154,26 @@ export async function PATCH(req: NextRequest) {
     console.error("Error updating user:", error);
     return NextResponse.json(
       { message: "Failed to update user" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("id");
+
+  if (!userId)
+    return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
+
+  try {
+    await connectToMongoDB();
+    await User.findByIdAndDelete(userId);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Failed to delete user" },
       { status: 500 },
     );
   }

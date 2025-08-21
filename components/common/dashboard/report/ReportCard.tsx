@@ -16,9 +16,13 @@ interface MobileReportCardListProps {
   reports: Report[];
   onView?: (report: Report) => void;
   onRespond?: (report: Report) => void;
+  onUpdate?: (updated: Report) => void;
 }
 
-export default function ReportCard({ reports }: MobileReportCardListProps) {
+export default function ReportCard({
+  reports,
+  onUpdate,
+}: MobileReportCardListProps) {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRespondModalOpen, setIsRespondModalOpen] = useState(false);
@@ -54,7 +58,7 @@ export default function ReportCard({ reports }: MobileReportCardListProps) {
   return (
     <div className="md:hidden space-y-4">
       {reports.map((report) => (
-        <Card key={report.id} className="overflow-hidden gap-0 border">
+        <Card key={report._id} className="overflow-hidden gap-0 border">
           <CardHeader className="py-4 border-b">
             <div className="flex justify-between items-start">
               <div>
@@ -108,9 +112,45 @@ export default function ReportCard({ reports }: MobileReportCardListProps) {
 
       {respondReport && (
         <RespondReportModal
+          reportId={respondReport._id} // ✅ This line is required
           isOpen={isRespondModalOpen}
           onCloseAction={handleCloseRespondModal}
-          reportId={respondReport._id}
+          onResponseSubmit={async (updatedPartial) => {
+            try {
+              const res = await fetch(
+                `/api/function/report?id=${updatedPartial._id}`,
+              );
+              const fullUpdated = await res.json();
+
+              // 🔧 FIX: Apply transformation
+              const transformed: Report = {
+                _id: fullUpdated._id,
+                id: respondReport?.id ?? "#--",
+                title: fullUpdated.title,
+                description: fullUpdated.description,
+                imageUrl: fullUpdated.imageUrl,
+                response: fullUpdated.response,
+                address: fullUpdated.address ?? "-",
+                category: fullUpdated.categoryId?.name ?? "Uncategorized",
+                status: fullUpdated.status?.toLowerCase().replace("-", "_"),
+                user: fullUpdated.userId?.name ?? "Unknown",
+                date: new Date(fullUpdated.createdAt)
+                  .toISOString()
+                  .split("T")[0],
+                createdAt: fullUpdated.createdAt,
+                updatedAt: fullUpdated.updatedAt,
+                userId: fullUpdated.userId?._id ?? "",
+              };
+
+              if (onUpdate) {
+                onUpdate(transformed); // ✅ Pass the transformed data
+              }
+
+              handleCloseRespondModal();
+            } catch (err) {
+              console.error("Failed to refetch updated report:", err);
+            }
+          }}
         />
       )}
     </div>

@@ -6,11 +6,14 @@ type User = {
   name: string;
 };
 
+type Role = "user" | "worker" | "admin" | null;
+
 type AppLayoutProps = {
-  children: ReactNode;
-  role: "user" | "null";
-  user?: User | null;
+    children: ReactNode;
+    role: Role;
+    user?: User | null;
 };
+
 
 export default function AppLayout({ children, role, user }: AppLayoutProps) {
   return (

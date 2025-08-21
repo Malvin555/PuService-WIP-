@@ -11,7 +11,7 @@ import { useLogout } from "@/components/hooks/useLogout";
 const sections = ["home", "feature", "about"];
 
 interface NavbarProps {
-  role: "user" | "null";
+  role: "user" | "worker" | "admin" | null;
   user?: { name: string } | null;
 }
 
@@ -53,6 +53,7 @@ export default function NavigationMenu({ role, user }: NavbarProps) {
   }, []);
 
   const isUser = role === "user";
+
   return (
     <nav className="fixed w-full z-50 bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -110,7 +111,7 @@ export default function NavigationMenu({ role, user }: NavbarProps) {
             )}
           </div>
           {/* Right side: login/register only if not user */}
-          {isUser && user ? (
+          {user ? (
             <div className="hidden md:flex">
               <ProfileDropdown user={user} />
             </div>

@@ -30,7 +30,7 @@ export default function DashboardLayout({
       <div className="flex flex-col flex-1 min-w-0">
         {/* Top navbar */}
         <header className="sticky top-0 z-30 bg-background h-16 border-b">
-          <Navbar user={user} />
+          <Navbar user={user} role={role} />
         </header>
 
         {/* Page content */}

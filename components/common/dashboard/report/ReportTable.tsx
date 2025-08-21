@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -15,28 +12,37 @@ import StatusBadge from "@/components/common/ReportStatus";
 import RespondReportModal from "@/components/modal/RespondReportModal";
 import InfoReportModal from "@/components/modal/InfoReportModal";
 import { Report } from "@/types/report";
+import { useState } from "react";
 
 interface ReportTableCardProps {
   reports: Report[];
   onView?: (report: Report) => void;
   onRespond?: (report: Report) => void;
   isLoading?: boolean;
+  onUpdate?: (report: Report) => void;
 }
 
 export default function ReportTable({
   reports,
   isLoading,
+  onUpdate,
 }: ReportTableCardProps) {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRespondModalOpen, setIsRespondModalOpen] = useState(false);
   const [respondReport, setRespondReport] = useState<Report | null>(null);
+
+  const handleCloseRespondModal = () => {
+    setIsRespondModalOpen(false);
+    setRespondReport(null);
+  };
+
   const handleViewDetails = async (report: Report) => {
     try {
       const res = await fetch(`/api/function/report?id=${report._id}`);
       const fresh = await res.json();
 
-      setSelectedReport(fresh); // ← updated report with latest data
+      setSelectedReport(fresh);
       setIsModalOpen(true);
     } catch (err) {
       console.error("Failed to fetch report:", err);
@@ -104,7 +110,7 @@ export default function ReportTable({
               ) : (
                 currentReports.map((report, index) => (
                   <TableRow
-                    key={report.id}
+                    key={report._id}
                     className="hover:bg-muted/10 border-b"
                   >
                     <TableCell className="px-6 py-4 text-sm text-muted-foreground whitespace-nowrap">
@@ -161,9 +167,45 @@ export default function ReportTable({
 
           {respondReport && (
             <RespondReportModal
+              reportId={respondReport._id} // ✅ This line is required
               isOpen={isRespondModalOpen}
-              onCloseAction={() => setIsRespondModalOpen(false)}
-              reportId={respondReport._id}
+              onCloseAction={handleCloseRespondModal}
+              onResponseSubmit={async (updatedPartial) => {
+                try {
+                  const res = await fetch(
+                    `/api/function/report?id=${updatedPartial._id}`,
+                  );
+                  const fullUpdated = await res.json();
+
+                  // 🔧 FIX: Apply transformation
+                  const transformed: Report = {
+                    _id: fullUpdated._id,
+                    id: respondReport?.id ?? "#--",
+                    title: fullUpdated.title,
+                    description: fullUpdated.description,
+                    imageUrl: fullUpdated.imageUrl,
+                    response: fullUpdated.response,
+                    address: fullUpdated.address ?? "-",
+                    category: fullUpdated.categoryId?.name ?? "Uncategorized",
+                    status: fullUpdated.status?.toLowerCase().replace("-", "_"),
+                    user: fullUpdated.userId?.name ?? "Unknown",
+                    date: new Date(fullUpdated.createdAt)
+                      .toISOString()
+                      .split("T")[0],
+                    createdAt: fullUpdated.createdAt,
+                    updatedAt: fullUpdated.updatedAt,
+                    userId: fullUpdated.userId?._id ?? "",
+                  };
+
+                  if (onUpdate) {
+                    onUpdate(transformed); // ✅ Pass the transformed data
+                  }
+
+                  handleCloseRespondModal();
+                } catch (err) {
+                  console.error("Failed to refetch updated report:", err);
+                }
+              }}
             />
           )}
         </CardContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import ReportCard from "@/components/common/dashboard/report/ReportCard";
 import ReportTable from "@/components/common/dashboard/report/ReportTable";
 import { Report } from "@/types/report";
@@ -9,26 +10,18 @@ export default function ReportClientSection({
 }: {
   reports: Report[];
 }) {
-  const handleView = (report: Report) => {
-    console.log("View", report);
-  };
+  const [reportList, setReportList] = useState<Report[]>(reports);
 
-  const handleRespond = (report: Report) => {
-    console.log("Respond", report);
+  const handleUpdate = (updated: Report) => {
+    setReportList((prev) =>
+      prev.map((r) => (r._id === updated._id ? updated : r)),
+    );
   };
 
   return (
     <>
-      <ReportCard
-        reports={reports}
-        onView={handleView}
-        onRespond={handleRespond}
-      />
-      <ReportTable
-        reports={reports}
-        onView={handleView}
-        onRespond={handleRespond}
-      />
+      <ReportCard reports={reportList} onUpdate={handleUpdate} />
+      <ReportTable reports={reportList} onUpdate={handleUpdate} />
     </>
   );
 }

@@ -20,6 +20,7 @@ interface RespondReportModalProps {
   onCloseAction: () => void;
   reportId: string;
   onResponseSubmit?: (updatedReport: Report) => void;
+  onUpdated?: (updated: Report) => void;
 }
 
 export default function RespondReportModal({
@@ -27,6 +28,7 @@ export default function RespondReportModal({
   onCloseAction,
   reportId,
   onResponseSubmit,
+  onUpdated,
 }: RespondReportModalProps) {
   const [responseText, setResponseText] = useState("");
   const [status, setStatus] = useState<"pending" | "in_progress" | "resolved">(
@@ -37,26 +39,32 @@ export default function RespondReportModal({
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
+      // 1. First: PATCH the report (send response + status)
       const res = await fetch(`/api/function/report`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           reportId,
           response: responseText,
-          status: "in_progress",
+          status,
         }),
       });
 
       if (res.ok) {
-        const updated = await res.json();
-        onResponseSubmit?.(updated);
+        const fullRes = await fetch(`/api/function/report?id=${reportId}`);
+        const fullUpdatedReport = await fullRes.json();
+
+        // 3. Pass full populated report to the parent
+        onResponseSubmit?.(fullUpdatedReport);
+        onUpdated?.(fullUpdatedReport);
       }
 
+      // Reset form state
       setResponseText("");
       setStatus("pending");
       onCloseAction();
     } catch (err) {
-      console.error(err);
+      console.error("Failed to submit response:", err);
     } finally {
       setIsSubmitting(false);
     }
