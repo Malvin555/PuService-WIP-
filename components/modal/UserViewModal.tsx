@@ -25,6 +25,7 @@ interface UserInfoModalProps {
   onDeleteAction: (id: string) => void;
   onCloseAction: () => void;
   user: User | null;
+    canManage?: boolean;
 }
 
 export default function UserInfoModal({
@@ -32,6 +33,7 @@ export default function UserInfoModal({
   onCloseAction,
   onDeleteAction,
   user,
+                                          canManage = false,
 }: UserInfoModalProps) {
   if (!user) return null;
 
@@ -47,9 +49,14 @@ export default function UserInfoModal({
           <Button variant="outline" onClick={onCloseAction}>
             Close
           </Button>
-          <Button variant="destructive" onClick={() => onDeleteAction(user.id)}>
-            Delete
-          </Button>
+            {canManage && (
+                <Button
+                    variant="destructive"
+                    onClick={() => onDeleteAction(user.id)}
+                >
+                    Delete
+                </Button>
+            )}
         </div>
       }
     >

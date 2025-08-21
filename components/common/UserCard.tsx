@@ -23,9 +23,10 @@ type UserCardProps = {
   user: UserCardType;
   onView: (user: UserCardType) => void;
   onEdit: (user: UserCardType) => void;
+    canEdit?: boolean;
 };
 
-export default function UserCard({ user, onView, onEdit }: UserCardProps) {
+export default function     UserCard({ user, onView, onEdit, canEdit }: UserCardProps) {
   return (
     <Card className="gap-0">
       <CardHeader className="flex flex-row items-start justify-between py-4">
@@ -74,9 +75,11 @@ export default function UserCard({ user, onView, onEdit }: UserCardProps) {
           <Button variant="outline" size="sm" onClick={() => onView(user)}>
             View
           </Button>
-          <Button variant="default" size="sm" onClick={() => onEdit(user)}>
-            Edit
-          </Button>
+            {canEdit && (
+                <Button variant="default" size="sm" onClick={() => onEdit(user)}>
+                    Edit
+                </Button>
+            )}
         </div>
       </CardFooter>
     </Card>
